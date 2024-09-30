@@ -1,0 +1,140 @@
+<html>
+
+</html>
+
+<head>
+    <style>
+        @page {
+            size: A4;
+            margin-top: 20mm;
+            margin-bottom: 20mm;
+            margin-left: 10mm;
+            margin-right: 10mm;
+        }
+
+        body {
+            font-family: sans-serif;
+            font-size: 12px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        h3 {
+            text-align: left;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            font-size: 12px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Events Report</h1>
+
+    <h2>First Section</h2>
+    <h3>Date Range: {{ .FromDate.Format "2006-01-02" }} to {{ .ToDate.Format "2006-01-02" }}</h3>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit
+        amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a,
+        semper
+        congue, euismod non, mi.</p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Event ID</th>
+                <th>Event Date</th>
+                <th>Catering Type</th>
+                <th>Confirmed</th>
+                <th>Provisional</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range $index, $element := .Events}}
+            <tr>
+                <td>{{$index | add 1}}</td>
+                <td>{{.EventID}}</td>
+                <td>{{.EventDate.Format "2006-01-02"}}</td>
+                <td>{{.CateringType}}</td>
+                <td>{{.Confirmed}}</td>
+                <td>{{.Provisional}}</td>
+                <td>{{.Total}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+
+    <div style="page-break-before: always;"></div>
+
+    <h2>Second Section</h2>
+    <h3>Date Range: {{ .FromDate.Format "2006-01-02" }} to {{ .ToDate.Format "2006-01-02" }}</h3>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit
+        amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a,
+        semper
+        congue, euismod non, mi.</p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Event ID</th>
+                <th>Event Date</th>
+                <th>Catering Type</th>
+                <th>Confirmed</th>
+                <th>Provisional</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range $index, $element := .Events}}
+            {{if lt $index $.Midpoint}}
+            <tr>
+                <td>{{.EventID}}</td>
+                <td>{{.EventDate.Format "2006-01-02"}}</td>
+                <td>{{.CateringType}}</td>
+                <td>{{.Confirmed}}</td>
+                <td>{{.Provisional}}</td>
+                <td>{{.Total}}</td>
+            </tr>
+            {{end}}
+            {{end}}
+        </tbody>
+    </table>
+
+</body>
+
+</html>
