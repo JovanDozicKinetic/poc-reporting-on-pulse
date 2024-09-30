@@ -111,6 +111,7 @@
     <table border="1">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>Event ID</th>
                 <th>Event Date</th>
                 <th>Catering Type</th>
@@ -121,8 +122,8 @@
         </thead>
         <tbody>
             {{range $index, $element := .Events}}
-            {{if lt $index $.Midpoint}}
             <tr>
+                <td>{{$index | add 1}}</td>
                 <td>{{.EventID}}</td>
                 <td>{{.EventDate.Format "2006-01-02"}}</td>
                 <td>{{.CateringType}}</td>
@@ -130,7 +131,6 @@
                 <td>{{.Provisional}}</td>
                 <td>{{.Total}}</td>
             </tr>
-            {{end}}
             {{end}}
         </tbody>
     </table>

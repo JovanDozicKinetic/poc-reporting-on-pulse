@@ -1,168 +1,66 @@
 package main
 
 import (
-	"bytes"
-	"context"
-	"encoding/json"
 	"fmt"
-	"html/template"
-	"io/ioutil"
 	"log"
-	"math/rand"
-	"net/url"
-	"os"
-	"os/exec"
+	"net/http"
 	"path/filepath"
-	"sort"
+	"strconv"
+	"strings"
 	"time"
-
-	"github.com/Masterminds/sprig/v3"
-	"github.com/chromedp/cdproto/page"
-	"github.com/chromedp/chromedp"
 )
 
 func main() {
+	http.HandleFunc("/reports/template1", generateReportHandler)
 
-	jsonData := simulateEndpointCall()
+	log.Printf("Server listening on :8080")
 
-	var events []EventData
-	err := json.Unmarshal(jsonData, &events)
-	if err != nil {
-		log.Fatalln("JSON error: ", err)
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func generateReportHandler(w http.ResponseWriter, r *http.Request) {
+	sectionsParam := r.URL.Query().Get("sections")
+	if sectionsParam == "" {
+		http.Error(w, "Missing 'sections' parameter", http.StatusBadRequest)
+		return
 	}
-	log.Println("JSON data converted")
 
-	siteId := 101
+	sections, err := parseSections(sectionsParam)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	jsonData := SimulateEndpointCall()
+	events := UnmarshalEventData(jsonData)
+
+	siteID := 101
 	fromDate, _ := time.Parse("2006-01-02", "2010-01-10")
 	toDate, _ := time.Parse("2006-01-02", "2030-01-10")
 	currentTime := time.Now()
 
-	htmlContent := generateHTML(events, siteId, fromDate, toDate)
+	htmlContent := GenerateHTML(events, siteID, fromDate, toDate, sections)
 
-	fileName := fmt.Sprintf("events_report_site_%d_%s.pdf", siteId, currentTime.Format("2006-01-02-15-04-05"))
-	err = generatePDF(htmlContent, fileName)
+	fileName := fmt.Sprintf("events_report_site_%d_%s.pdf", siteID, currentTime.Format("2006-01-02-15-04-05"))
+	err = GeneratePDF(htmlContent, fileName)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, "Error generating PDF", http.StatusInternalServerError)
+		return
 	}
 
-	log.Printf("PDF report generated successfully!\nOpening %s...\n", fileName)
-
-	err = openFile(fileName)
-	if err != nil {
-		log.Fatal(err)
-	}
+	w.Header().Set("Content-Disposition", "attachment; filename="+fileName)
+	w.Header().Set("Content-Type", "application/pdf")
+	http.ServeFile(w, r, filepath.Join("pdf_exports/", fileName))
 }
 
-func simulateEndpointCall() []byte {
-	var events []map[string]interface{}
-
-	cateringTypes := []string{"Early Morning", "AM", "Mid Day", "PM", "Evening"}
-
-	for i := 1; i <= 35; i++ {
-		confirmed := rand.Intn(100)
-		provisional := rand.Intn(50)
-		event := map[string]interface{}{
-			"cateringType": cateringTypes[rand.Intn(5)],
-			"confirmed":    confirmed,
-			"eventDate":    time.Date(2024, time.Month(rand.Intn(12)+1), rand.Intn(28)+1, 0, 0, 0, 0, time.UTC).Format("2006-01-02T15:04:05Z"),
-			"eventId":      i,
-			"provisional":  provisional,
-			"total":        confirmed + provisional,
+func parseSections(sectionsParam string) ([]int, error) {
+	var sections []int
+	for _, sectionStr := range strings.Split(sectionsParam, ",") {
+		section, err := strconv.Atoi(sectionStr)
+		if err != nil {
+			return nil, fmt.Errorf("invalid section number: %s", sectionStr)
 		}
-		events = append(events, event)
+		sections = append(sections, section)
 	}
-
-	sort.Slice(events, func(i, j int) bool {
-		dateI, _ := time.Parse("2006-01-02T15:04:05Z", events[i]["eventDate"].(string))
-		dateJ, _ := time.Parse("2006-01-02T15:04:05Z", events[j]["eventDate"].(string))
-
-		if dateI.Equal(dateJ) {
-			return events[i]["cateringType"].(string) < events[j]["cateringType"].(string)
-		}
-		return dateI.Before(dateJ)
-	})
-
-	jsonData, err := json.Marshal(events)
-	if err != nil {
-		log.Fatalln("Error marshaling JSON:", err)
-	}
-
-	return jsonData
-}
-
-func generateHTML(events []EventData, siteID int, fromDate, toDate time.Time) string {
-	tmpl, err := template.New("template1.html").Funcs(sprig.FuncMap()).ParseFiles("templates/template1.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, struct {
-		Events   []EventData
-		SiteID   int
-		FromDate time.Time
-		ToDate   time.Time
-		Midpoint int
-	}{
-		Events:   events,
-		SiteID:   siteID,
-		FromDate: fromDate,
-		ToDate:   toDate,
-		Midpoint: len(events) / 2,
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	return buf.String()
-}
-
-func generatePDF(htmlContent, filename string) error {
-
-	ctx, cancel := chromedp.NewContext(context.Background())
-	defer cancel()
-
-	file, err := os.Create(filepath.Join("pdf_exports/", filename))
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	encodedHTML := url.PathEscape(htmlContent)
-
-	var pdfBuf []byte
-	err = chromedp.Run(ctx, chromedp.Tasks{
-
-		chromedp.Navigate("data:text/html," + encodedHTML),
-
-		//This is a screenshot for debugging, use this when content does not look right
-		chromedp.ActionFunc(func(ctx context.Context) error {
-			var buf []byte
-			buf, err := page.CaptureScreenshot().Do(ctx)
-			if err != nil {
-				return err
-			}
-			return ioutil.WriteFile("debug_screenshot.png", buf, 0644)
-		}),
-
-		chromedp.ActionFunc(func(ctx context.Context) error {
-			var err error
-			pdfBuf, _, err = page.PrintToPDF().WithPrintBackground(true).Do(ctx)
-			return err
-		}),
-	})
-	if err != nil {
-		return err
-	}
-
-	_, err = file.Write(pdfBuf)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func openFile(filename string) error {
-	err := exec.Command("rundll32", "url.dll,FileProtocolHandler", filepath.Join("pdf_exports/", filename)).Start()
-	return err
+	return sections, nil
 }
