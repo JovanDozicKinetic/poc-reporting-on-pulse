@@ -75,7 +75,7 @@ func generateReportHandler(w http.ResponseWriter, r *http.Request) {
 	htmlContent := GenerateHTML(events, cateringTypes, siteID, fromDate, toDate, sections)
 
 	fileName := fmt.Sprintf("events_report_site_%d_%s.pdf", siteID, currentTime.Format("2006-01-02-15-04-05"))
-	err = GeneratePDF(htmlContent, fileName)
+	err = GeneratePDF(htmlContent, filepath.Join("pdf_exports/", fileName))
 	if err != nil {
 		http.Error(w, "Error generating PDF", http.StatusInternalServerError)
 		return

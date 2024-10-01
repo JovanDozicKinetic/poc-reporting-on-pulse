@@ -2,17 +2,13 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"html/template"
 	"log"
-	"net/url"
-	"os"
-	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/Masterminds/sprig/v3"
-	"github.com/chromedp/cdproto/page"
-	"github.com/chromedp/chromedp"
+	wkhtmltopdf "github.com/SebastiaanKlippert/go-wkhtmltopdf"
 )
 
 func GenerateHTML(events []EventData, cateringTypes []CateringType, siteID int, fromDate, toDate time.Time, sections string) string {
@@ -20,8 +16,6 @@ func GenerateHTML(events []EventData, cateringTypes []CateringType, siteID int, 
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	log.Println("SECTIONS:", sections)
 
 	var buf bytes.Buffer
 	err = tmpl.Execute(&buf, struct {
@@ -47,44 +41,36 @@ func GenerateHTML(events []EventData, cateringTypes []CateringType, siteID int, 
 
 func GeneratePDF(htmlContent, filename string) error {
 
-	ctx, cancel := chromedp.NewContext(context.Background())
-	defer cancel()
-
-	file, err := os.Create(filepath.Join("pdf_exports/", filename))
+	pdfg, err := wkhtmltopdf.NewPDFGenerator()
 	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	encodedHTML := url.PathEscape(htmlContent)
-
-	var pdfBuf []byte
-	err = chromedp.Run(ctx, chromedp.Tasks{
-
-		chromedp.Navigate("data:text/html," + encodedHTML),
-
-		//This is a screenshot for debugging, use this when content does not look right
-		// chromedp.ActionFunc(func(ctx context.Context) error {
-		// 	var buf []byte
-		// 	buf, err := page.CaptureScreenshot().Do(ctx)
-		// 	if err != nil {
-		// 		return err
-		// 	}
-		// 	return ioutil.WriteFile("debug_screenshot.png", buf, 0644)
-		// }),
-
-		chromedp.ActionFunc(func(ctx context.Context) error {
-			var err error
-			pdfBuf, _, err = page.PrintToPDF().WithPrintBackground(true).Do(ctx)
-			return err
-		}),
-	})
-	if err != nil {
+		log.Println("Error creating new PDF generator:", err)
 		return err
 	}
 
-	_, err = file.Write(pdfBuf)
+	page := wkhtmltopdf.NewPageReader(strings.NewReader(htmlContent))
+	pdfg.AddPage(page)
+
+	pdfg.PageSize.Set(wkhtmltopdf.PageSizeA4)
+	pdfg.MarginTop.Set(20)
+	pdfg.MarginBottom.Set(20)
+	pdfg.MarginLeft.Set(20)
+	pdfg.MarginRight.Set(20)
+	pdfg.Dpi.Set(150)
+
+	page.FooterHTML.Set("templates\\template1_footer.html")
+
+	pdfg.Cover.NoStopSlowScripts.Set(false)
+	pdfg.TOC.NoStopSlowScripts.Set(false)
+
+	err = pdfg.Create()
 	if err != nil {
+		log.Println("Error creating a page:", err)
+		return err
+	}
+
+	err = pdfg.WriteFile(filename)
+	if err != nil {
+		log.Println("Error writing to the file ", filename, ":", err)
 		return err
 	}
 

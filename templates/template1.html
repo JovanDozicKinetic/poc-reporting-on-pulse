@@ -4,27 +4,8 @@
 
 <head>
     <style>
-        @page {
-            size: A4;
-            margin-top: 20mm;
-            margin-bottom: 20mm;
-            margin-left: 10mm;
-            margin-right: 10mm;
-
-            @top-left {
-                content: "Events Report"; /* Document Title */
-                font-size: 14px;
-                margin-bottom: 10px;
-            }
-
-            @bottom-right {
-                content: counter(page) " of " counter(pages); /* Page Numbering */
-                font-size: 12px;
-            }
-        }
-
         body {
-            font-family: sans-serif;
+            font-family: Helvetica, sans-serif;
             font-size: 12px;
         }
 
@@ -67,9 +48,8 @@
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-
-        
     </style>
+
 </head>
 
 <body>
@@ -116,7 +96,7 @@
         </table>
 
         {{if or (contains "#2#" .Sections) (contains "#3#" .Sections)}}
-            <div style="page-break-before: always;"></div>
+        <div style="page-break-before: always;"></div>
         {{end}}
     </div>
     {{end}}
@@ -157,7 +137,7 @@
             </tbody>
         </table>
         {{if contains "#3#" .Sections}}
-            <div style="page-break-before: always;"></div>
+        <div style="page-break-before: always;"></div>
         {{end}}
     </div>
     {{end}}
@@ -192,7 +172,6 @@
         </table>
     </div>
     {{end}}
-
 
 </body>
 
