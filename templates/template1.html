@@ -10,6 +10,17 @@
             margin-bottom: 20mm;
             margin-left: 10mm;
             margin-right: 10mm;
+
+            @top-left {
+                content: "Events Report"; /* Document Title */
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            @bottom-right {
+                content: counter(page) " of " counter(pages); /* Page Numbering */
+                font-size: 12px;
+            }
         }
 
         body {
@@ -56,6 +67,8 @@
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+
+        
     </style>
 </head>
 
@@ -63,77 +76,123 @@
 
     <h1>Events Report</h1>
 
-    <h2>First Section</h2>
-    <h3>Date Range: {{ .FromDate.Format "2006-01-02" }} to {{ .ToDate.Format "2006-01-02" }}</h3>
+    <!-- SECTION 1 -->
+    {{if contains "#1#" .Sections}}
+    <div id="section1">
+        <h2>First Section</h2>
+        <h3>Date Range: {{ .FromDate.Format "2006-01-02" }} to {{ .ToDate.Format "2006-01-02" }}</h3>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit
-        amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a,
-        semper
-        congue, euismod non, mi.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim
+            sit
+            amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a,
+            semper
+            congue, euismod non, mi.</p>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>Event ID</th>
-                <th>Event Date</th>
-                <th>Catering Type</th>
-                <th>Confirmed</th>
-                <th>Provisional</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{range $index, $element := .Events}}
-            <tr>
-                <td>{{$index | add 1}}</td>
-                <td>{{.EventID}}</td>
-                <td>{{.EventDate.Format "2006-01-02"}}</td>
-                <td>{{.CateringType}}</td>
-                <td>{{.Confirmed}}</td>
-                <td>{{.Provisional}}</td>
-                <td>{{.Total}}</td>
-            </tr>
-            {{end}}
-        </tbody>
-    </table>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Event ID</th>
+                    <th>Event Date</th>
+                    <th>Catering Type</th>
+                    <th>Confirmed</th>
+                    <th>Provisional</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range $index, $element := .Events}}
+                <tr>
+                    <td>{{$index | add 1}}</td>
+                    <td>{{.EventID}}</td>
+                    <td>{{.EventDate.Format "2006-01-02"}}</td>
+                    <td>{{.CateringType}}</td>
+                    <td>{{.Confirmed}}</td>
+                    <td>{{.Provisional}}</td>
+                    <td>{{.Total}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
 
-    <div style="page-break-before: always;"></div>
+        {{if or (contains "#2#" .Sections) (contains "#3#" .Sections)}}
+            <div style="page-break-before: always;"></div>
+        {{end}}
+    </div>
+    {{end}}
 
-    <h2>Second Section</h2>
-    <h3>Date Range: {{ .FromDate.Format "2006-01-02" }} to {{ .ToDate.Format "2006-01-02" }}</h3>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit
-        amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a,
-        semper
-        congue, euismod non, mi.</p>
+    <!-- SECTION 2 -->
+    {{if contains "#2#" .Sections}}
+    <div id="section2">
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>Event ID</th>
-                <th>Event Date</th>
-                <th>Catering Type</th>
-                <th>Confirmed</th>
-                <th>Provisional</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{range $index, $element := .Events}}
-            <tr>
-                <td>{{$index | add 1}}</td>
-                <td>{{.EventID}}</td>
-                <td>{{.EventDate.Format "2006-01-02"}}</td>
-                <td>{{.CateringType}}</td>
-                <td>{{.Confirmed}}</td>
-                <td>{{.Provisional}}</td>
-                <td>{{.Total}}</td>
-            </tr>
-            {{end}}
-        </tbody>
-    </table>
+        <h2>Second Section</h2>
+        <h3>This is some other table or data.</h3>
+
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+            industry's
+            standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
+            make
+            a type specimen book. It has survived not only five centuries, but also the leap into electronic
+            typesetting,
+            remaining essentially unchanged. It was popularized in the 1960s with the release of Letraset sheets
+            containing
+            Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including
+            versions
+            of Lorem Ipsum.</p>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Something</th>
+                    <th>Something</th>
+                    <th>Something</th>
+                    <th>Something</th>
+                    <th>Something</th>
+                    <th>Something</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        {{if contains "#3#" .Sections}}
+            <div style="page-break-before: always;"></div>
+        {{end}}
+    </div>
+    {{end}}
+
+
+    <!-- SECTION 3 -->
+    {{if contains "#3#" .Sections}}
+    <div id="section3">
+
+        <h2>Third Section</h2>
+        <h3>This is some data about catering sessions.</h3>
+
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range $index, $element := .CateringTypes}}
+                <tr>
+                    <td>{{$index | add 1}}</td>
+                    <td>{{.ID}}</td>
+                    <td>{{.Name}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    {{end}}
+
 
 </body>
 

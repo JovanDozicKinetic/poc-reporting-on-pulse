@@ -10,3 +10,8 @@ type EventData struct {
 	Provisional  int       `json:"provisional"`
 	Total        int       `json:"total"`
 }
+
+type CateringType struct {
+	ID   int    `json:"id"`
+	Name string `json:"catering_type"`
+}

@@ -15,25 +15,29 @@ import (
 	"github.com/chromedp/chromedp"
 )
 
-func GenerateHTML(events []EventData, siteID int, fromDate, toDate time.Time, sections []int) string {
+func GenerateHTML(events []EventData, cateringTypes []CateringType, siteID int, fromDate, toDate time.Time, sections string) string {
 	tmpl, err := template.New("template1.html").Funcs(sprig.FuncMap()).ParseFiles("templates/template1.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	log.Println("SECTIONS:", sections)
+
 	var buf bytes.Buffer
 	err = tmpl.Execute(&buf, struct {
-		Events   []EventData
-		SiteID   int
-		FromDate time.Time
-		ToDate   time.Time
-		Sections []int
+		Events        []EventData
+		SiteID        int
+		FromDate      time.Time
+		ToDate        time.Time
+		Sections      string
+		CateringTypes []CateringType
 	}{
-		Events:   events,
-		SiteID:   siteID,
-		FromDate: fromDate,
-		ToDate:   toDate,
-		Sections: sections,
+		Events:        events,
+		SiteID:        siteID,
+		FromDate:      fromDate,
+		ToDate:        toDate,
+		Sections:      sections,
+		CateringTypes: cateringTypes,
 	})
 	if err != nil {
 		log.Fatal(err)
