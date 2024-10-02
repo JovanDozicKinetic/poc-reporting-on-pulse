@@ -2,6 +2,7 @@
 <html>
 
 <head>
+
     <script>
         function subst() {
             var vars = {};
@@ -31,20 +32,10 @@
             margin: 0;
         }
 
-        .triangle {
-            width: 0;
-            height: 0;
-            border-left: 100px solid transparent;
-            border-right: 100px solid transparent;
-            border-bottom: 100px solid #6200EE;
-            position: relative;
-        }
-
         .header {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            color: #6200EE;
             font-size: 14px;
         }
 
@@ -60,22 +51,25 @@
             color: #222;
         }
 
-        .footer {
-            margin-top: 20px;
+        .doctitle {
+            font-weight: bold;
+            color: #6200EE;
         }
+
     </style>
 </head>
 
 <body onload="subst()">
 
-    <table class="footer">
+    <table class="header">
         <tr>
             <td class="section"></td>
             <td style="text-align:right">
-                <span class="page"></span> of <span class="topage"></span>
+                Pulse Report - <span class="doctitle"></span>
             </td>
         </tr>
     </table>
+
 
 </body>
 

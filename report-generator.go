@@ -49,7 +49,7 @@ func GeneratePDF(htmlContent, filename string) error {
 
 	page := wkhtmltopdf.NewPageReader(strings.NewReader(htmlContent))
 	pdfg.AddPage(page)
-
+	pdfg.Title.Set("Events Report Title")
 	pdfg.PageSize.Set(wkhtmltopdf.PageSizeA4)
 	pdfg.MarginTop.Set(20)
 	pdfg.MarginBottom.Set(20)
@@ -57,10 +57,8 @@ func GeneratePDF(htmlContent, filename string) error {
 	pdfg.MarginRight.Set(20)
 	pdfg.Dpi.Set(150)
 
+	page.HeaderHTML.Set("templates\\template1_header.html")
 	page.FooterHTML.Set("templates\\template1_footer.html")
-
-	pdfg.Cover.NoStopSlowScripts.Set(false)
-	pdfg.TOC.NoStopSlowScripts.Set(false)
 
 	err = pdfg.Create()
 	if err != nil {
