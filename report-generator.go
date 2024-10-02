@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"html/template"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -39,7 +41,14 @@ func GenerateHTML(events []EventData, cateringTypes []CateringType, siteID int, 
 	return buf.String()
 }
 
-func GeneratePDF(htmlContent, filename string) error {
+func GeneratePDF(htmlContent, fileName string) error {
+
+	// TODO: move this to some other method as it should not be here
+	err := saveHTMLToFile(htmlContent, "export.html")
+	if err != nil {
+		log.Println("Error saving HTML content to a file:", err)
+		return err
+	}
 
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
 	if err != nil {
@@ -48,6 +57,7 @@ func GeneratePDF(htmlContent, filename string) error {
 	}
 
 	page := wkhtmltopdf.NewPageReader(strings.NewReader(htmlContent))
+
 	pdfg.AddPage(page)
 	pdfg.Title.Set("Events Report Title")
 	pdfg.PageSize.Set(wkhtmltopdf.PageSizeA4)
@@ -66,9 +76,9 @@ func GeneratePDF(htmlContent, filename string) error {
 		return err
 	}
 
-	err = pdfg.WriteFile(filename)
+	err = pdfg.WriteFile(fileName)
 	if err != nil {
-		log.Println("Error writing to the file ", filename, ":", err)
+		log.Println("Error writing to the file ", fileName, ":", err)
 		return err
 	}
 
@@ -79,3 +89,20 @@ func GeneratePDF(htmlContent, filename string) error {
 // 	err := exec.Command("rundll32", "url.dll,FileProtocolHandler", filepath.Join("pdf_exports/", filename)).Start()
 // 	return err
 // }
+
+func saveHTMLToFile(htmlContent string, fileName string) error {
+
+	file, err := os.Create(filepath.Join("html_exports/", fileName))
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(htmlContent)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
