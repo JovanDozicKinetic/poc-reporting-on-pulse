@@ -11,19 +11,15 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/reports/template1", generateReportHandler)
+
+	http.HandleFunc("/reports/template1", generateReportTemplate1Handler)
 
 	log.Printf("Server listening on :8080")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func generateReportHandler(w http.ResponseWriter, r *http.Request) {
-	sectionsParam := r.URL.Query().Get("sections")
-	if sectionsParam == "" {
-		http.Error(w, "Missing parameter", http.StatusBadRequest)
-		return
-	}
+func generateReportTemplate1Handler(w http.ResponseWriter, r *http.Request) {
 
 	siteIDString := r.URL.Query().Get("siteId")
 	if siteIDString == "" {
@@ -58,26 +54,35 @@ func generateReportHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	sectionsParam := r.URL.Query().Get("sections")
+	if sectionsParam == "" {
+		http.Error(w, "Missing parameter", http.StatusBadRequest)
+		return
+	}
 	sections, err := parseSections(sectionsParam)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	jsonData := SimulateEventsEndpointCall()
-	events := UnmarshalEventData(jsonData)
+	events, cateringTypes := GetTemplate1Data()
 
-	jsonData = SimulateCateringTypesEndpointCall()
-	cateringTypes := UnmarshalCateringTypeData(jsonData)
+	fileName := fmt.Sprintf("events_report_site_%d_%s.pdf", siteID, time.Now().Format("2006-01-02-15-04-05"))
 
-	currentTime := time.Now()
-
-	htmlContent := GenerateHTML(events, cateringTypes, siteID, fromDate, toDate, sections)
-
-	fileName := fmt.Sprintf("events_report_site_%d_%s.pdf", siteID, currentTime.Format("2006-01-02-15-04-05"))
-	err = GeneratePDF(htmlContent, filepath.Join("pdf_exports/", fileName))
+	htmlContent, err := GenerateTemplate1HTML(events, cateringTypes, siteID, fromDate, toDate, sections, fileName)
 	if err != nil {
-		http.Error(w, "Error generating PDF", http.StatusInternalServerError)
+		http.Error(w, "Error generating HTML content: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = GeneratePDF(
+		htmlContent,
+		"Events Report Title",
+		filepath.Join("pdf_exports/", fileName),
+		"templates\\template1_header.html",
+		"templates\\template1_footer.html")
+	if err != nil {
+		http.Error(w, "Error generating PDF"+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -87,6 +92,10 @@ func generateReportHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func parseSections(sectionsParam string) (string, error) {
+
+	// This method parses sections part of the query (e.g. `1,2,3`) into
+	//   tags that will be used to identify sections in HTML template (e.g. `#1# #2# #3#`)
+
 	var sections []string
 	for _, sectionStr := range strings.Split(sectionsParam, ",") {
 		sectionTag := "#" + sectionStr + "#"
@@ -97,7 +106,3 @@ func parseSections(sectionsParam string) (string, error) {
 	log.Println("Requested sections: `", tags, "`.")
 	return tags, nil
 }
-
-// func parseSections(sectionsParam string) ([]string, error) {
-// 	return strings.Split(sectionsParam, ","), nil
-// }

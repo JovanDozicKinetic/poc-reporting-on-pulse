@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -13,14 +14,15 @@ import (
 	wkhtmltopdf "github.com/SebastiaanKlippert/go-wkhtmltopdf"
 )
 
-func GenerateHTML(events []EventData, cateringTypes []CateringType, siteID int, fromDate, toDate time.Time, sections string) string {
-	tmpl, err := template.New("template1.html").Funcs(sprig.FuncMap()).ParseFiles("templates/template1.html")
+func GenerateTemplate1HTML(events []EventData, cateringTypes []CateringType, siteID int, fromDate, toDate time.Time, sections, fileName string) (string, error) {
+
+	template, err := template.New("template1.html").Funcs(sprig.FuncMap()).ParseFiles("templates/template1.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, struct {
+	err = template.Execute(&buf, struct {
 		Events        []EventData
 		SiteID        int
 		FromDate      time.Time
@@ -38,17 +40,19 @@ func GenerateHTML(events []EventData, cateringTypes []CateringType, siteID int, 
 	if err != nil {
 		log.Fatal(err)
 	}
-	return buf.String()
+
+	htmlContent := buf.String()
+
+	err = saveHTMLToFile(htmlContent, strings.Replace(fileName, ".pdf", ".html", -1))
+	if err != nil {
+		log.Println("Error saving HTML content to a file", fileName, "error: ", err)
+		return "", err
+	}
+
+	return htmlContent, nil
 }
 
-func GeneratePDF(htmlContent, fileName string) error {
-
-	// TODO: move this to some other method as it should not be here
-	err := saveHTMLToFile(htmlContent, "export.html")
-	if err != nil {
-		log.Println("Error saving HTML content to a file:", err)
-		return err
-	}
+func GeneratePDF(htmlContent, reportTitle, fileName, headerPath, footerPath string) error {
 
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
 	if err != nil {
@@ -58,8 +62,10 @@ func GeneratePDF(htmlContent, fileName string) error {
 
 	page := wkhtmltopdf.NewPageReader(strings.NewReader(htmlContent))
 
+	pdfg.Cover.EnableLocalFileAccess.Set(true)
+
 	pdfg.AddPage(page)
-	pdfg.Title.Set("Events Report Title")
+	pdfg.Title.Set(reportTitle)
 	pdfg.PageSize.Set(wkhtmltopdf.PageSizeA4)
 	pdfg.MarginTop.Set(20)
 	pdfg.MarginBottom.Set(20)
@@ -67,8 +73,12 @@ func GeneratePDF(htmlContent, fileName string) error {
 	pdfg.MarginRight.Set(20)
 	pdfg.Dpi.Set(150)
 
-	page.HeaderHTML.Set("templates\\template1_header.html")
-	page.FooterHTML.Set("templates\\template1_footer.html")
+	if headerPath != "" {
+		page.HeaderHTML.Set(headerPath)
+	}
+	if footerPath != "" {
+		page.FooterHTML.Set(footerPath)
+	}
 
 	err = pdfg.Create()
 	if err != nil {
@@ -78,17 +88,18 @@ func GeneratePDF(htmlContent, fileName string) error {
 
 	err = pdfg.WriteFile(fileName)
 	if err != nil {
-		log.Println("Error writing to the file ", fileName, ":", err)
+		log.Println("Error writing to the file", fileName, "error:", err)
 		return err
 	}
 
 	return nil
 }
 
-// func openFile(filename string) error {
-// 	err := exec.Command("rundll32", "url.dll,FileProtocolHandler", filepath.Join("pdf_exports/", filename)).Start()
-// 	return err
-// }
+func openFile(filename string) error {
+	// Note: this only works on Windows
+	err := exec.Command("rundll32", "url.dll,FileProtocolHandler", filepath.Join("pdf_exports/", filename)).Start()
+	return err
+}
 
 func saveHTMLToFile(htmlContent string, fileName string) error {
 
@@ -104,5 +115,4 @@ func saveHTMLToFile(htmlContent string, fileName string) error {
 	}
 
 	return nil
-
 }
