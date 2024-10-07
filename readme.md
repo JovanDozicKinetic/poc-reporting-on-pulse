@@ -1,7 +1,7 @@
 
 # POC - Reporting on Pulse
 
-Used library:
+Used libraries:
 - For PDF generation:
     - https://wkhtmltopdf.org/usage/wkhtmltopdf.txt
     - https://github.com/SebastiaanKlippert/go-wkhtmltopdf
