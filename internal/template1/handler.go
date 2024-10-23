@@ -73,7 +73,13 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 		filepath.Join("pdf_exports/", fileName),
 		"templates\\template1\\header.html",
 		"templates\\template1\\footer.html",
-		"portrait")
+		"portrait",
+		helpers.Margins{
+			Top:    20,
+			Bottom: 20,
+			Left:   20,
+			Right:  20,
+		})
 	if err != nil {
 		http.Error(w, "Error generating PDF"+err.Error(), http.StatusInternalServerError)
 		return

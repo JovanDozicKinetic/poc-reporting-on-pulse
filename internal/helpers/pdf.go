@@ -10,7 +10,14 @@ import (
 	wkhtmltopdf "github.com/SebastiaanKlippert/go-wkhtmltopdf"
 )
 
-func GeneratePDF(htmlContent, reportTitle, fileName, headerPath, footerPath, orientation string) error {
+type Margins struct {
+	Top    uint
+	Bottom uint
+	Left   uint
+	Right  uint
+}
+
+func GeneratePDF(htmlContent, reportTitle, fileName, headerPath, footerPath, orientation string, margins Margins) error {
 
 	pdfg, err := wkhtmltopdf.NewPDFGenerator()
 	if err != nil {
@@ -25,10 +32,10 @@ func GeneratePDF(htmlContent, reportTitle, fileName, headerPath, footerPath, ori
 	pdfg.AddPage(page)
 	pdfg.Title.Set(reportTitle)
 	pdfg.PageSize.Set(wkhtmltopdf.PageSizeA4)
-	pdfg.MarginTop.Set(20)
-	pdfg.MarginBottom.Set(20)
-	pdfg.MarginLeft.Set(20)
-	pdfg.MarginRight.Set(20)
+	pdfg.MarginTop.Set(margins.Top)
+	pdfg.MarginBottom.Set(margins.Bottom)
+	pdfg.MarginLeft.Set(margins.Left)
+	pdfg.MarginRight.Set(margins.Right)
 	pdfg.Dpi.Set(150)
 
 	if orientation == "landscape" {

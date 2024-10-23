@@ -60,7 +60,6 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>No.</th>
                     {{if .HasIsChanged}}<th>Is Changed</th>{{end}}
                     <th>Event ID</th>
                     <th>Event Module ID</th>
@@ -86,7 +85,6 @@
             <tbody>
                 {{range $index, $element := .EventsRunning}}
                 <tr>
-                    <td>{{$index | add 1}}</td>
                     {{if $.HasIsChanged}}<td>{{if $element.IsChanged}}Yes{{else}}No{{end}}</td>{{end}}
                     <td>{{.EventID}}</td>
                     <td>{{.EventModuleID}}</td>

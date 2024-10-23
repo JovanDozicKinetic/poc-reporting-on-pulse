@@ -15,7 +15,8 @@ func GenerateHTML(eventsRunning []EventRunning, fileName string) (string, error)
 
 	template, err := template.New("template.html").Funcs(sprig.FuncMap()).ParseFiles("templates/events-running/template.html")
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error while loading HTML template file:", err)
+		return "", err
 	}
 
 	var buf bytes.Buffer
@@ -32,7 +33,8 @@ func GenerateHTML(eventsRunning []EventRunning, fileName string) (string, error)
 		HasIsChanged:  hasIsChanged(eventsRunning), // This will be customizable from report to report
 	})
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error while generating HTML:", err)
+		return "", err
 	}
 
 	htmlContent := buf.String()

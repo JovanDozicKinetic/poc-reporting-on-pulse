@@ -24,11 +24,17 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = helpers.GeneratePDF(
 		htmlContent,
-		"Events Report Title",
+		"Events Running Report",
 		filepath.Join("pdf_exports/events-running/", fileName),
 		"templates\\events-running\\header.html",
 		"templates\\events-running\\footer.html",
-		"landscape")
+		"landscape",
+		helpers.Margins{
+			Top:    10,
+			Bottom: 10,
+			Left:   10,
+			Right:  10,
+		})
 	if err != nil {
 		http.Error(w, "Error generating PDF"+err.Error(), http.StatusInternalServerError)
 		return
