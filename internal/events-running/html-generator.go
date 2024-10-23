@@ -21,16 +21,18 @@ func GenerateHTML(eventsRunning []EventRunning, fileName string) (string, error)
 
 	var buf bytes.Buffer
 	err = template.Execute(&buf, struct {
+		SiteName      string
 		EventsRunning []EventRunning
 		FromDate      time.Time
 		ToDate        time.Time
 		// Custom parameters:
 		HasIsChanged bool
 	}{
+		SiteName:      "Kx Campus",
 		EventsRunning: eventsRunning,
-		FromDate:      time.Now(),
-		ToDate:        time.Now(),
-		HasIsChanged:  hasIsChanged(eventsRunning), // This will be customizable from report to report
+		FromDate:      time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC),
+		ToDate:        time.Date(2024, 12, 31, 23, 59, 59, 999999999, time.UTC),
+		HasIsChanged:  hasIsChanged(eventsRunning),
 	})
 	if err != nil {
 		log.Println("Error while generating HTML:", err)
@@ -49,7 +51,6 @@ func GenerateHTML(eventsRunning []EventRunning, fileName string) (string, error)
 }
 
 func hasIsChanged(events []EventRunning) bool {
-	log.Println(events[0])
 	for _, event := range events {
 		if event.IsChanged != nil {
 			return true

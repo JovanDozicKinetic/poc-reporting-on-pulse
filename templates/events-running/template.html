@@ -46,65 +46,81 @@
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
+
+        .events-running-table {
+            width: 100%;
+        }
+
+        .event-ref {
+            width: 50px;
+        }
+
+        .event-title {
+            width: 150px;
+        }
+
+        .event-created-by {
+            width: 75px;
+        }
+
+        .event-manager {
+            width: 75px;
+        }
+
+        .event-arrival, .event-start, .event-end, .event-night {
+            width: 75px;
+        }
+
+        .event-day, .event-night {
+            width: 40;
+        }
     </style>
 </head>
 
 <body>
 
-    <h1>Events Running Report</h1>
+    <h1>Events Running for {{ .SiteName }}, {{ .FromDate.Format "Monday 02 January 2006"}} to {{ .ToDate.Format "Monday 02 January 2006"}}</h1>
 
     <div id="section1">
-        <h2>Event Details</h2>
-        <h3>Date Range: {{ .FromDate.Format "2006-01-02" }} to {{ .ToDate.Format "2006-01-02" }}</h3>
 
-        <table border="1">
+        <table border="1" class="events-running-table">
             <thead>
                 <tr>
-                    {{if .HasIsChanged}}<th>Is Changed</th>{{end}}
-                    <th>Event ID</th>
-                    <th>Event Module ID</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>Created By</th>
-                    <th>Event Manager</th>
-                    <th>Arrival Date</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Departure Date</th>
-                    <th>Day Numbers</th>
-                    <th>Night Numbers</th>
-                    <th>Person ID</th>
-                    <th>Person Name</th>
-                    <th>Company ID</th>
-                    <th>Company Name</th>
-                    <th>Meeting Room ID</th>
-                    <th>Meeting Room Name</th>
+                    {{if $.HasIsChanged}}<th class="event-is-changed"></th>{{end}}
+                    <th class="event-ref">Ref</th>
+                    <th class="event-title">Title</th>
+                    <th class="event-created-by">Created by</th>
+                    <th class="event-manager">Manager</th>
+                    <th class="event-arrival">Arrival</th>
+                    <th class="event-start">Start</th>
+                    <th class="event-end">End</th>
+                    <th class="event-departure">Departure</th>
+                    <th class="event-day">Day</th>
+                    <th class="event-night">Night</th>
+                    <th class="event-contact">Main Contact</th>
+                    <th class="event-company">Company</th>
+                    <th class="event-status">Status</th>
+                    <th class="event-type">Type</th>
                 </tr>
             </thead>
             <tbody>
                 {{range $index, $element := .EventsRunning}}
                 <tr>
-                    {{if $.HasIsChanged}}<td>{{if $element.IsChanged}}Yes{{else}}No{{end}}</td>{{end}}
-                    <td>{{.EventID}}</td>
-                    <td>{{.EventModuleID}}</td>
-                    <td>{{.EventTitle}}</td>
-                    <td>{{.EventStatus}}</td>
-                    <td>{{.EventType}}</td>
-                    <td>{{.CreatedBy}}</td>
-                    <td>{{.EventManager}}</td>
-                    <td>{{.EventArrivalDate}}</td>
-                    <td>{{.EventStartDate}}</td>
-                    <td>{{.EventEndDate}}</td>
-                    <td>{{.EventDepartureDate}}</td>
-                    <td>{{.EventDayNumbers}}</td>
-                    <td>{{.EventNightNumbers}}</td>
-                    <td>{{if .PersonID}}{{.PersonID}}{{else}}N/A{{end}}</td>
-                    <td>{{if .PersonName}}{{.PersonName}}{{else}}N/A{{end}}</td>
-                    <td>{{if .CompanyID}}{{.CompanyID}}{{else}}N/A{{end}}</td>
-                    <td>{{if .CompanyName}}{{.CompanyName}}{{else}}N/A{{end}}</td>
-                    <td>{{if .MeetingRoomID}}{{.MeetingRoomID}}{{else}}N/A{{end}}</td>
-                    <td>{{if .MeetingRoomName}}{{.MeetingRoomName}}{{else}}No Meeting Room{{end}}</td>
+                    {{if $.HasIsChanged}}<td class="event-ref">{{if $element.IsChanged}}Yes{{else}}No{{end}}</td>{{end}}
+                    <td class="event-ref">{{.EventID}}</td>
+                    <td class="event-title">{{.EventTitle}}</td>
+                    <td class="event-created-by">{{.CreatedBy}}</td>
+                    <td class="event-manager">{{.EventManager}}</td>
+                    <td class="event-arrival">{{.EventArrivalDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-start">{{.EventStartDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-end">{{.EventEndDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-departure">{{.EventDepartureDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-day">{{.EventDayNumbers}}</td>
+                    <td class="event-night">{{.EventNightNumbers}}</td>
+                    <td class="event-contact">{{if .PersonName}}{{.PersonName}}{{else}}N/A{{end}}</td>
+                    <td class="event-company">{{if .CompanyName}}{{.CompanyName}}{{else}}N/A{{end}}</td>
+                    <td class="event-status">{{.EventStatus}}</td>
+                    <td class="event-type">{{.EventType}}</td>
                 </tr>
                 {{end}}
             </tbody>
