@@ -1,56 +1,14 @@
-package main
+package helpers
 
 import (
-	"bytes"
-	"html/template"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"time"
 
-	"github.com/Masterminds/sprig/v3"
 	wkhtmltopdf "github.com/SebastiaanKlippert/go-wkhtmltopdf"
 )
-
-func GenerateTemplate1HTML(events []EventData, cateringTypes []CateringType, siteID int, fromDate, toDate time.Time, sections, fileName string) (string, error) {
-
-	template, err := template.New("template1.html").Funcs(sprig.FuncMap()).ParseFiles("templates/template1.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var buf bytes.Buffer
-	err = template.Execute(&buf, struct {
-		Events        []EventData
-		SiteID        int
-		FromDate      time.Time
-		ToDate        time.Time
-		Sections      string
-		CateringTypes []CateringType
-	}{
-		Events:        events,
-		SiteID:        siteID,
-		FromDate:      fromDate,
-		ToDate:        toDate,
-		Sections:      sections,
-		CateringTypes: cateringTypes,
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	htmlContent := buf.String()
-
-	err = saveHTMLToFile(htmlContent, strings.Replace(fileName, ".pdf", ".html", -1))
-	if err != nil {
-		log.Println("Error saving HTML content to a file", fileName, "error: ", err)
-		return "", err
-	}
-
-	return htmlContent, nil
-}
 
 func GeneratePDF(htmlContent, reportTitle, fileName, headerPath, footerPath string) error {
 
@@ -95,13 +53,13 @@ func GeneratePDF(htmlContent, reportTitle, fileName, headerPath, footerPath stri
 	return nil
 }
 
-func openFile(filename string) error {
+func OpenFile(filename string) error {
 	// Note: this only works on Windows
 	err := exec.Command("rundll32", "url.dll,FileProtocolHandler", filepath.Join("pdf_exports/", filename)).Start()
 	return err
 }
 
-func saveHTMLToFile(htmlContent string, fileName string) error {
+func SaveHTMLToFile(htmlContent string, fileName string) error {
 
 	file, err := os.Create(filepath.Join("html_exports/", fileName))
 	if err != nil {
