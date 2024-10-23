@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func GenerateReportTemplate1Handler(w http.ResponseWriter, r *http.Request) {
+func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 
 	siteIDString := r.URL.Query().Get("siteId")
 	if siteIDString == "" {
@@ -57,11 +57,11 @@ func GenerateReportTemplate1Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	events, cateringTypes := GetTemplate1Data()
+	events, cateringTypes := GetData()
 
 	fileName := fmt.Sprintf("events_report_site_%d_%s.pdf", siteID, time.Now().Format("2006-01-02-15-04-05"))
 
-	htmlContent, err := GenerateTemplate1HTML(events, cateringTypes, siteID, fromDate, toDate, sections, fileName)
+	htmlContent, err := GenerateHTML(events, cateringTypes, siteID, fromDate, toDate, sections, fileName)
 	if err != nil {
 		http.Error(w, "Error generating HTML content: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -72,7 +72,8 @@ func GenerateReportTemplate1Handler(w http.ResponseWriter, r *http.Request) {
 		"Events Report Title",
 		filepath.Join("pdf_exports/", fileName),
 		"templates\\template1\\header.html",
-		"templates\\template1\\footer.html")
+		"templates\\template1\\footer.html",
+		"portrait")
 	if err != nil {
 		http.Error(w, "Error generating PDF"+err.Error(), http.StatusInternalServerError)
 		return
@@ -80,7 +81,7 @@ func GenerateReportTemplate1Handler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Disposition", "attachment; filename="+fileName)
 	w.Header().Set("Content-Type", "application/pdf")
-	http.ServeFile(w, r, filepath.Join("pdf_exports/", fileName))
+	http.ServeFile(w, r, filepath.Join("pdf_exports/template1/", fileName))
 }
 
 func parseSections(sectionsParam string) (string, error) {

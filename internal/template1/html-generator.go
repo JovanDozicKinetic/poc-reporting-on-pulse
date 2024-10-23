@@ -11,7 +11,7 @@ import (
 	"github.com/Masterminds/sprig/v3"
 )
 
-func GenerateTemplate1HTML(events []EventData, cateringTypes []CateringType, siteID int, fromDate, toDate time.Time, sections, fileName string) (string, error) {
+func GenerateHTML(events []EventData, cateringTypes []CateringType, siteID int, fromDate, toDate time.Time, sections, fileName string) (string, error) {
 
 	template, err := template.New("template.html").Funcs(sprig.FuncMap()).ParseFiles("templates/template1/template.html")
 	if err != nil {

@@ -1,0 +1,118 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Helvetica, sans-serif;
+            font-size: 12px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        h3 {
+            text-align: left;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            font-size: 12px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Events Running Report</h1>
+
+    <div id="section1">
+        <h2>Event Details</h2>
+        <h3>Date Range: {{ .FromDate.Format "2006-01-02" }} to {{ .ToDate.Format "2006-01-02" }}</h3>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    {{if .HasIsChanged}}<th>Is Changed</th>{{end}}
+                    <th>Event ID</th>
+                    <th>Event Module ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Created By</th>
+                    <th>Event Manager</th>
+                    <th>Arrival Date</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Departure Date</th>
+                    <th>Day Numbers</th>
+                    <th>Night Numbers</th>
+                    <th>Person ID</th>
+                    <th>Person Name</th>
+                    <th>Company ID</th>
+                    <th>Company Name</th>
+                    <th>Meeting Room ID</th>
+                    <th>Meeting Room Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range $index, $element := .EventsRunning}}
+                <tr>
+                    <td>{{$index | add 1}}</td>
+                    {{if $.HasIsChanged}}<td>{{if $element.IsChanged}}Yes{{else}}No{{end}}</td>{{end}}
+                    <td>{{.EventID}}</td>
+                    <td>{{.EventModuleID}}</td>
+                    <td>{{.EventTitle}}</td>
+                    <td>{{.EventStatus}}</td>
+                    <td>{{.EventType}}</td>
+                    <td>{{.CreatedBy}}</td>
+                    <td>{{.EventManager}}</td>
+                    <td>{{.EventArrivalDate}}</td>
+                    <td>{{.EventStartDate}}</td>
+                    <td>{{.EventEndDate}}</td>
+                    <td>{{.EventDepartureDate}}</td>
+                    <td>{{.EventDayNumbers}}</td>
+                    <td>{{.EventNightNumbers}}</td>
+                    <td>{{if .PersonID}}{{.PersonID}}{{else}}N/A{{end}}</td>
+                    <td>{{if .PersonName}}{{.PersonName}}{{else}}N/A{{end}}</td>
+                    <td>{{if .CompanyID}}{{.CompanyID}}{{else}}N/A{{end}}</td>
+                    <td>{{if .CompanyName}}{{.CompanyName}}{{else}}N/A{{end}}</td>
+                    <td>{{if .MeetingRoomID}}{{.MeetingRoomID}}{{else}}N/A{{end}}</td>
+                    <td>{{if .MeetingRoomName}}{{.MeetingRoomName}}{{else}}No Meeting Room{{end}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>
