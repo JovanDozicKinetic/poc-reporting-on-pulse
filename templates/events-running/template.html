@@ -52,7 +52,25 @@
         }
 
         .event-ref {
-            width: 50px;
+            vertical-align: middle;
+            width: 60px;
+            text-align: right;
+
+            /* why does justify content center no work in pdf but yes work in browser!?!?!?!??! */
+            /* display: flex;
+            justify-content: space-between;
+            align-items: center; */
+        }
+
+        .event-ref .is-changed {
+            color: red;
+            vertical-align: middle;
+            font-weight: bold;
+            font-size: xx-large;
+        }
+
+        .event-ref .event-id {
+            vertical-align: middle;
         }
 
         .event-title {
@@ -79,7 +97,6 @@
             width: 40px;
         }
 
-        /* TODO: Other columns have to be fixed */
 
         .event-status-type {
             width: 100px;
@@ -101,7 +118,6 @@
         <table border="1" class="events-running-table">
             <thead>
                 <tr>
-                    {{if $.HasIsChanged}}<th class="event-is-changed"></th>{{end}}
                     <th class="event-ref">Ref</th>
                     <th class="event-title">Title</th>
                     <th class="event-created-by">Created by</th>
@@ -122,8 +138,13 @@
             <tbody>
                 {{range $index, $element := .EventsRunning}}
                 <tr>
-                    {{if $.HasIsChanged}}<td class="event-ref">{{if $element.IsChanged}}Yes{{else}}No{{end}}</td>{{end}}
-                    <td class="event-ref">{{.EventID}}</td>
+                    <td class="event-ref">
+                        <span class="is-changed">
+                            {{if .IsChanged}}!{{end}}
+                        </span>
+                        <span class="event-id">{{.EventID}}</span>
+                    </td>
+
                     <td class="event-title">{{.EventTitle}}</td>
                     <td class="event-created-by">{{.CreatedBy}}</td>
                     <td class="event-manager">{{.EventManager}}</td>
