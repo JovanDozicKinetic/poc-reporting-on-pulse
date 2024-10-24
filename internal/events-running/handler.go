@@ -93,11 +93,10 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var footerText string
+	footerText := `Events Running ` + dateFrom.Format("Mon 01 Jan 2006") + ` - ` + dateTo.Format("Mon 01 Jan 2006")
+
 	if templateData.HasChangedSince {
-		footerText = "Marked changes since: " + templateData.ChangedSince.Format("Monday 02 January 2006")
-	} else {
-		footerText = ""
+		footerText += `<span style="color: #888;"> (Marked changes since: ` + templateData.ChangedSince.Format("Mon 02 Jan 2006") + `)</span>`
 	}
 
 	err = helpers.GeneratePDF(

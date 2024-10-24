@@ -9,7 +9,7 @@
             for (var query_string in query_strings_from_url) {
                 if (query_strings_from_url.hasOwnProperty(query_string)) {
                     var temp_var = query_strings_from_url[query_string].split('=', 2);
-                    vars[temp_var[0]] = decodeURI(temp_var[1]);
+                    vars[temp_var[0]] = decodeURIComponent(temp_var[1]);
                 }
             }
             var css_selector_classes = ['page', 'frompage', 'topage', 'webpage', 'section', 'subsection', 'date', 'isodate', 'time', 'title', 'doctitle', 'sitepage', 'sitepages'];
@@ -17,7 +17,7 @@
                 if (css_selector_classes.hasOwnProperty(css_class)) {
                     var element = document.getElementsByClassName(css_selector_classes[css_class]);
                     for (var j = 0; j < element.length; ++j) {
-                        element[j].textContent = vars[css_selector_classes[css_class]];
+                        element[j].innerHTML = vars[css_selector_classes[css_class]];
                     }
                 }
             }
@@ -28,23 +28,26 @@
         body {
             font-family: sans-serif;
             border: 0;
-            margin: 0;
+            margin-top: 100px;
+        }
+
+        .footer {
+            margin-top: 100px;
+            font-size: 12px;
+            color: #222;
         }
 
         table {
             width: 100%;
         }
 
-        table tr td {
-            color: #555;
+        .page-number {
+            text-align: right;
+            color: #888;
         }
 
-        .page {
-            color: #222;
-        }
-
-        .footer {
-            margin-top: 20px;
+        .page-number .current-page {
+            color:#222;
         }
 
         .is-changed-mark {
@@ -66,8 +69,8 @@
                 <!--<span class="is-changed-mark">!</span>-->
                 <span class="doctitle"></span>
             </td>
-            <td style="text-align:right">
-                <span class="page"></span> of <span class="topage"></span>
+            <td class="page-number">
+                <span class="current-page page"></span> of <span class="topage"></span>
             </td>
         </tr>
     </table>
