@@ -1,11 +1,11 @@
-package main
+package template1
 
 import (
 	"encoding/json"
 	"log"
 )
 
-func GetTemplate1Data() ([]EventData, []CateringType) {
+func GetData() ([]EventData, []CateringType) {
 
 	jsonData := simulateEventsEndpointCall()
 	events := unmarshalEventData(jsonData)

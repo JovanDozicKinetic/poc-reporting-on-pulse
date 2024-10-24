@@ -1,0 +1,253 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Helvetica, sans-serif;
+            font-size: 12px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        h3 {
+            text-align: left;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            border-bottom: 1px solid #ddd !important;
+            font-size: 12px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .events-running-table {
+            width: 100%;
+        }
+
+        .event-ref {
+            vertical-align: middle;
+            width: 60px;
+            text-align: right;
+        }
+
+        .event-ref .is-changed {
+            color: red;
+            vertical-align: middle;
+            font-weight: bold;
+            font-size: xx-large;
+        }
+
+        .event-ref .event-id {
+            vertical-align: middle;
+        }
+
+        .event-title {
+            width: 150px;
+        }
+
+        .event-created-by {
+            width: 75px;
+        }
+
+        .event-manager {
+            width: 75px;
+        }
+
+        .event-arrival,
+        .event-start,
+        .event-end,
+        .event-departure {
+            width: 75px;
+        }
+
+        .event-day,
+        .event-night {
+            width: 40px;
+        }
+
+        .event-contact {
+            width: 75px;
+        }
+
+        .event-company {
+            width: 75px;
+        }
+
+        .event-status-type {
+            width: 100px;
+        }
+
+        .table-title-row {
+            border: 1px solid #fff;
+        }
+
+        .table-title {
+            border: none;
+            margin-top: 35px;
+            background-color: transparent;
+        }
+
+        .title-container {
+            border: none;
+            margin-left: -10px;
+            margin-bottom: -15px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>Events Running for {{ .SiteName }}, {{ .DateFrom.Format "Monday 02 January 2006"}} to
+        {{ .DateTo.Format "Monday 02 January 2006"}}
+    </h1>
+
+    {{if not .IsMeetingRoomsIncluded}}
+    <div>
+
+        <table border="1" class="events-running-table">
+            <thead>
+                <tr>
+                    <th class="event-ref">Ref</th>
+                    <th class="event-title">Title</th>
+                    <th class="event-created-by">Created by</th>
+                    <th class="event-manager">Manager</th>
+                    <th class="event-arrival">Arrival</th>
+                    <th class="event-start">Start</th>
+                    <th class="event-end">End</th>
+                    <th class="event-departure">Departure</th>
+                    <th class="event-day">Day</th>
+                    <th class="event-night">Night</th>
+                    <th class="event-contact">Contact</th>
+                    <th class="event-company">Company</th>
+                    <!-- <th class="event-status">Status</th>
+                    <th class="event-type">Type</th> -->
+                    <th class="event-status-type">Status | Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range $index, $element := .EventsRunning}}
+                <tr>
+                    <td class="event-ref">
+                        <span class="is-changed">
+                            {{if .IsChanged}}!{{end}}
+                        </span>
+                        <span class="event-id">{{.EventID}}</span>
+                    </td>
+
+                    <td class="event-title">{{.EventTitle}}</td>
+                    <td class="event-created-by">{{.CreatedBy}}</td>
+                    <td class="event-manager">{{.EventManager}}</td>
+                    <td class="event-arrival">{{.EventArrivalDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-start">{{.EventStartDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-end">{{.EventEndDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-departure">{{.EventDepartureDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-day">{{.EventDayNumbers}}</td>
+                    <td class="event-night">{{.EventNightNumbers}}</td>
+                    <td class="event-contact">{{if .PersonName}}{{.PersonName}}{{else}}N/A{{end}}</td>
+                    <td class="event-company">{{if .CompanyName}}{{.CompanyName}}{{else}}N/A{{end}}</td>
+                    <!-- <td class="event-status">{{.EventStatus}}</td>
+                    <td class="event-type">{{.EventType}}</td> -->
+                    <td class="event-status-type">{{.EventStatus}}
+                        <hr style="margin: 5px 0;">{{.EventType}}
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    {{else}}
+
+    <div>
+        {{range $index, $room := .MeetingRooms}}
+
+        <table border="1" class="events-running-table">
+            <thead>
+                {{if ne $room.MeetingRoomID -1}}
+                <tr class="table-title-row">
+                    <th colspan="13" class="table-title">
+                        <div class="title-container"><h2><b>Meeting Room:</b> Site - {{ $.SiteName }}: {{ .MeetingRoomName }}</h2></div>
+                    </th>
+                </tr>
+                {{end}}
+
+                <tr>
+                    <th class="event-ref">Ref</th>
+                    <th class="event-title">Title</th>
+                    <th class="event-created-by">Created by</th>
+                    <th class="event-manager">Manager</th>
+                    <th class="event-arrival">Arrival</th>
+                    <th class="event-start">Start</th>
+                    <th class="event-end">End</th>
+                    <th class="event-departure">Departure</th>
+                    <th class="event-day">Day</th>
+                    <th class="event-night">Night</th>
+                    <th class="event-contact">Contact</th>
+                    <th class="event-company">Company</th>
+                    <th class="event-status-type">Status | Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range $index, $event := .Events}}
+                <tr>
+                    <td class="event-ref">
+                        <span class="is-changed">
+                            {{if $event.IsChanged}}!{{end}}
+                        </span>
+                        <span class="event-id">{{$event.EventID}}</span>
+                    </td>
+                    <td class="event-title">{{$event.EventTitle}}</td>
+                    <td class="event-created-by">{{$event.CreatedBy}}</td>
+                    <td class="event-manager">{{$event.EventManager}}</td>
+                    <td class="event-arrival">{{$event.EventArrivalDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-start">{{$event.EventStartDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-end">{{$event.EventEndDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-departure">{{$event.EventDepartureDate.Format "Mon 02 Jan 15:04"}}</td>
+                    <td class="event-day">{{$event.EventDayNumbers}}</td>
+                    <td class="event-night">{{$event.EventNightNumbers}}</td>
+                    <td class="event-contact">{{if $event.PersonName}}{{$event.PersonName}}{{else}}N/A{{end}}</td>
+                    <td class="event-company">{{if $event.CompanyName}}{{$event.CompanyName}}{{else}}N/A{{end}}</td>
+                    <td class="event-status-type">{{$event.EventStatus}}
+                        <hr style="margin: 5px 0;">{{$event.EventType}}
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        {{end}}
+    </div>
+
+    {{end}}
+
+</body>
+
+</html>
