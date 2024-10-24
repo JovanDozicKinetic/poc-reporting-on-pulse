@@ -30,6 +30,7 @@
             margin: 0 auto;
             border-collapse: collapse;
             border: 1px solid #ddd;
+            border-bottom: 1px solid #ddd !important;
             font-size: 12px;
         }
 
@@ -110,6 +111,22 @@
             width: 100px;
         }
 
+        .table-title-row {
+            border: 1px solid #fff;
+        }
+
+        .table-title {
+            border: none;
+            margin-top: 35px;
+            background-color: transparent;
+        }
+
+        .title-container {
+            border: none;
+            margin-left: -10px;
+            margin-bottom: -15px;
+        }
+
     </style>
 </head>
 
@@ -178,12 +195,16 @@
     <div id="section2">
         {{range $index, $room := .MeetingRooms}}
 
-        {{if ne $room.MeetingRoomID -1}}
-        <h2><b>Meeting Room:</b> Site - {{ $.SiteName }}: {{ .MeetingRoomName }}</h2>
-        {{end}}
-
         <table border="1" class="events-running-table">
             <thead>
+                {{if ne $room.MeetingRoomID -1}}
+                <tr class="table-title-row">
+                    <th colspan="13" class="table-title">
+                        <div class="title-container"><h2><b>Meeting Room:</b> Site - {{ $.SiteName }}: {{ .MeetingRoomName }}</h2></div>
+                    </th>
+                </tr>
+                {{end}}
+
                 <tr>
                     <th class="event-ref">Ref</th>
                     <th class="event-title">Title</th>
