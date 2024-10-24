@@ -24,7 +24,7 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = helpers.GeneratePDF(
 		htmlContent,
-		"Events Running Report",
+		"Marked changes since: "+time.Date(2024, 6, 12, 0, 0, 0, 0, time.UTC).Format("Monday 02 January 2006"),
 		filepath.Join("pdf_exports/events-running/", fileName),
 		"templates\\events-running\\header.html",
 		"templates\\events-running\\footer.html",

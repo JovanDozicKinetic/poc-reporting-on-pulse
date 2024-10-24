@@ -30,7 +30,7 @@ func GeneratePDF(htmlContent, reportTitle, fileName, headerPath, footerPath, ori
 	pdfg.Cover.EnableLocalFileAccess.Set(true)
 
 	pdfg.AddPage(page)
-	pdfg.Title.Set(reportTitle)
+	pdfg.Title.Set(reportTitle) // we can use this as a workaround for custom footer text
 	pdfg.PageSize.Set(wkhtmltopdf.PageSizeA4)
 	pdfg.MarginTop.Set(margins.Top)
 	pdfg.MarginBottom.Set(margins.Bottom)
