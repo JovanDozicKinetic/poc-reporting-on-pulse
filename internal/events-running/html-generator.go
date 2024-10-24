@@ -6,12 +6,11 @@ import (
 	"log"
 	helpers "pdf-poc/internal/helpers"
 	"strings"
-	"time"
 
 	"github.com/Masterminds/sprig/v3"
 )
 
-func GenerateHTML(eventsRunning []EventRunning, fileName string) (string, error) {
+func GenerateHTML(templateData TemplateData, fileName string) (string, error) {
 
 	template, err := template.New("template.html").Funcs(sprig.FuncMap()).ParseFiles("templates/events-running/template.html")
 	if err != nil {
@@ -19,20 +18,10 @@ func GenerateHTML(eventsRunning []EventRunning, fileName string) (string, error)
 		return "", err
 	}
 
-	convertIsChanged(eventsRunning)
+	convertIsChanged(templateData.EventsRunning)
 
 	var buf bytes.Buffer
-	err = template.Execute(&buf, struct {
-		SiteName      string
-		EventsRunning []EventRunning
-		FromDate      time.Time
-		ToDate        time.Time
-	}{
-		SiteName:      "Kx Campus",
-		EventsRunning: eventsRunning,
-		FromDate:      time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC),
-		ToDate:        time.Date(2024, 12, 31, 23, 59, 59, 999999999, time.UTC),
-	})
+	err = template.Execute(&buf, templateData)
 	if err != nil {
 		log.Println("Error while generating HTML:", err)
 		return "", err
