@@ -18,7 +18,7 @@ func GenerateHTML(templateData TemplateData, fileName string) (string, error) {
 		return "", err
 	}
 
-	convertIsChanged(templateData.EventsRunning)
+	convertIsChanged(templateData)
 
 	var buf bytes.Buffer
 	err = template.Execute(&buf, templateData)
@@ -38,10 +38,20 @@ func GenerateHTML(templateData TemplateData, fileName string) (string, error) {
 	return htmlContent, nil
 }
 
-func convertIsChanged(events []EventRunning) {
-	for i := range events {
-		if events[i].IsChanged != nil && !*events[i].IsChanged {
-			events[i].IsChanged = nil
+func convertIsChanged(templateData TemplateData) {
+	if templateData.IsMeetingRoomsIncluded {
+		for _, meetingRoom := range templateData.MeetingRooms {
+			for i := range meetingRoom.Events {
+				if meetingRoom.Events[i].IsChanged != nil && !*meetingRoom.Events[i].IsChanged {
+					meetingRoom.Events[i].IsChanged = nil
+				}
+			}
+		}
+	} else {
+		for i := range templateData.EventsRunning {
+			if templateData.EventsRunning[i].IsChanged != nil && !*templateData.EventsRunning[i].IsChanged {
+				templateData.EventsRunning[i].IsChanged = nil
+			}
 		}
 	}
 }
