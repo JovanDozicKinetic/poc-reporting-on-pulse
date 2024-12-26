@@ -1,3 +1,4 @@
+
 <html>
 
 <head>
@@ -27,7 +28,7 @@
     }
 
     table {
-      font-size: 12px;
+      font-size: 10px;
     }
 
     .main-table {
@@ -36,6 +37,7 @@
       border-collapse: collapse;
       border: 1px solid #ddd;
       /* border-bottom: 1px solid #ddd !important; */
+      font-size: 10px;
     }
 
     .main-table th {
@@ -108,6 +110,10 @@
       vertical-align: top;
     }
 
+    .ru-equipment-qty {
+      width: 30px;
+    }
+
     .none-border-left {
       border-left: none !important;
     }
@@ -116,45 +122,16 @@
       border-right: none !important;
     }
 
-
-    /* COLUMN WIDTHS */
-
-    .ru-booking {
-      width: 200px;
-    }
-
-    .ru-room-time {
-      width: 200px;
-    }
-
-    .ru-no {
-      width: 10px;
-    }
-
-    .ru-layout {
-      width: 200px;
-    }
-
-    .ru-equipment {
-      width: 200px;
-
-      .ru-equipment-qty {
-        width: 30px;
-      }
-    }
-
     .ru-next-use {
-      width: 100px;
-
       vertical-align: top;
     }
 
     .ru-changed-since {
-      width: 15px;
-
       vertical-align: top;
+      width: 15px;
       padding: 5px 0 0 0;
     }
+
   </style>
 </head>
 
@@ -174,7 +151,7 @@
         <tr>
           <th class="ru-booking">Booking</th>
           <th class="ru-room-time">Room & Time</th>
-          <th class="ru-no">No.</th>
+          <th class="ru-no">No</th>
           <th class="ru-layout">Layout</th>
           <th class="ru-equipment">Equipment</th>
           <th class="ru-next-use" colspan="2">Next Use</th>
@@ -279,9 +256,9 @@
           </td>
 
           <td class="ru-next-use none-border-right">
-            09 Oct 2024
-            <br>
-            10:00
+              09 Oct 2024
+              <br>
+              10:00
           </td>
 
           <td class="ru-changed-since is-changed none-border-left">
@@ -289,9 +266,98 @@
           </td>
 
         </tr>
+
       </tbody>
+
+      <!-- <tbody>
+        {{range $index, $element := .EventsRunning}}
+        <tr>
+          <td class="event-ref">
+            <span class="is-changed">
+              {{if .IsChanged}}!{{end}}
+            </span>
+            <span class="event-id">{{.EventID}}</span>
+          </td>
+
+          <td class="event-title">{{.EventTitle}}</td>
+          <td class="event-created-by">{{.CreatedBy}}</td>
+          <td class="event-manager">{{.EventManager}}</td>
+          <td class="event-arrival">{{.EventArrivalDate.Format "Mon 02 Jan 15:04"}}</td>
+          <td class="event-start">{{.EventStartDate.Format "Mon 02 Jan 15:04"}}</td>
+          <td class="event-end">{{.EventEndDate.Format "Mon 02 Jan 15:04"}}</td>
+          <td class="event-departure">{{.EventDepartureDate.Format "Mon 02 Jan 15:04"}}</td>
+          <td class="event-day">{{.EventDayNumbers}}</td>
+          <td class="event-night">{{.EventNightNumbers}}</td>
+          <td class="event-contact">{{if .PersonName}}{{.PersonName}}{{else}}N/A{{end}}</td>
+          <td class="event-company">{{if .CompanyName}}{{.CompanyName}}{{else}}N/A{{end}}</td>
+          <td class="event-status-type">{{.EventStatus}}
+          </td>
+        </tr>
+        {{end}}
+      </tbody> -->
     </table>
   </div>
+
+  <!-- <div>
+    {{range $index, $room := .MeetingRooms}}
+
+    <table border="1" class="room-usage-table">
+      <thead>
+        {{if ne $room.MeetingRoomID -1}}
+        <tr class="table-title-row">
+          <th colspan="13" class="table-title">
+            <div class="title-container">
+              <h2><b>Meeting Room:</b> Site - {{ $.SiteName }}: {{ .MeetingRoomName }}</h2>
+            </div>
+          </th>
+        </tr>
+        {{end}}
+
+        <tr>
+          <th class="event-ref">Ref</th>
+          <th class="event-title">Title</th>
+          <th class="event-created-by">Created by</th>
+          <th class="event-manager">Manager</th>
+          <th class="event-arrival">Arrival</th>
+          <th class="event-start">Start</th>
+          <th class="event-end">End</th>
+          <th class="event-departure">Departure</th>
+          <th class="event-day">Day</th>
+          <th class="event-night">Night</th>
+          <th class="event-contact">Contact</th>
+          <th class="event-company">Company</th>
+          <th class="event-status-type">Status | Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range $index, $event := .Events}}
+        <tr>
+          <td class="event-ref">
+            <span class="is-changed">
+              {{if $event.IsChanged}}!{{end}}
+            </span>
+            <span class="event-id">{{$event.EventID}}</span>
+          </td>
+          <td class="event-title">{{$event.EventTitle}}</td>
+          <td class="event-created-by">{{$event.CreatedBy}}</td>
+          <td class="event-manager">{{$event.EventManager}}</td>
+          <td class="event-arrival">{{$event.EventArrivalDate.Format "Mon 02 Jan 15:04"}}</td>
+          <td class="event-start">{{$event.EventStartDate.Format "Mon 02 Jan 15:04"}}</td>
+          <td class="event-end">{{$event.EventEndDate.Format "Mon 02 Jan 15:04"}}</td>
+          <td class="event-departure">{{$event.EventDepartureDate.Format "Mon 02 Jan 15:04"}}</td>
+          <td class="event-day">{{$event.EventDayNumbers}}</td>
+          <td class="event-night">{{$event.EventNightNumbers}}</td>
+          <td class="event-contact">{{if $event.PersonName}}{{$event.PersonName}}{{else}}N/A{{end}}</td>
+          <td class="event-company">{{if $event.CompanyName}}{{$event.CompanyName}}{{else}}N/A{{end}}</td>
+          <td class="event-status-type">{{$event.EventStatus}}
+            <hr style="margin: 5px 0;">{{$event.EventType}}
+          </td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+    {{end}}
+  </div> -->
 
 </body>
 

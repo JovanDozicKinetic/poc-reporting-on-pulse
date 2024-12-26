@@ -65,7 +65,7 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 		filepath.Join("pdf_exports/room-usage/", fileName),
 		"templates/room-usage/header.html",
 		"templates/room-usage/footer.html",
-		"landscape",
+		"horizontal",
 		helpers.Margins{
 			Top:    10,
 			Bottom: 10,
