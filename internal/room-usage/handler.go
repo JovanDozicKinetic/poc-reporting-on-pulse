@@ -38,7 +38,6 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 	// Preparing the template
 
 	templateData := TemplateData{
-		SiteName:        "Site Name",
 		DateFrom:        dateFrom,
 		DateTo:          dateTo,
 		HasChangedSince: hasIsChanged,
