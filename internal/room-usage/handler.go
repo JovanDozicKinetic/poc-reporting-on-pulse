@@ -21,15 +21,7 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Getting the mock data:
 
-	// var eventsRunning []EventRunning
-	// var meetingRoom []MeetingRoom
-	// if isMeetingRoomsIncluded {
-	// 	meetingRoom = GetEventDataWithMeetingRooms(hasIsChanged)
-	// 	eventsRunning = nil
-	// } else {
-	// 	eventsRunning = GetEventDataWithoutMeetingRooms(hasIsChanged)
-	// 	meetingRoom = nil
-	// }
+	dates := GetEventDataWithoutMeetingRooms()
 
 	// Preparing the file
 
@@ -38,10 +30,14 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 	// Preparing the template
 
 	templateData := TemplateData{
-		DateFrom:        dateFrom,
-		DateTo:          dateTo,
+		AreaName: "Kx Campus",
+		DateFrom: dateFrom,
+		DateTo:   dateTo,
+
 		HasChangedSince: hasIsChanged,
 		ChangedSince:    changedSince,
+
+		Dates: dates,
 	}
 
 	// HTML and PDF generation
