@@ -38,7 +38,10 @@
       border: 1px solid #ddd;
     }
 
-    .main-table th {
+    /* Make the header darker gray with white text */
+    .main-table thead th {
+      background-color: #e0e0e0;
+      color: #000000;
       font-size: 12px;
     }
 
@@ -49,11 +52,21 @@
       border: 1px solid #ddd;
     }
 
-    th {
-      background-color: #f2f2f2;
+    /* Date row (semi-gray) */
+    tr.date-row td {
+      background-color: #eeeeee;
     }
 
-    tr:nth-child(even) {
+    /* Remove default striping so we can control it ourselves */
+    /* tr:nth-child(even) {
+      background-color: #f9f9f9;
+    } */
+
+    /* Alternate row colors for booking rows inside each date */
+    tr.booking-row:nth-child(odd) td {
+      background-color: #ffffff;
+    }
+    tr.booking-row:nth-child(even) td {
       background-color: #f9f9f9;
     }
 
@@ -167,7 +180,7 @@
         {{- /* Loop over each date in Dates */ -}}
         {{- range .Dates }}
         <!-- Show the date row -->
-        <tr>
+        <tr class="date-row">
           <td colspan="7">
             <h3>{{ .Date | date "Monday 02 January 2006" }}</h3>
           </td>
@@ -175,7 +188,7 @@
 
         {{- /* Loop over each booking in this Date */ -}}
         {{- range .Bookings }}
-        <tr>
+        <tr class="booking-row">
           <!-- Booking info -->
           <td class="ru-booking child-table-cell">
             <table class="child-table">
