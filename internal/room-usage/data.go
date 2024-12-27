@@ -24,7 +24,7 @@ func simulateDatesData() []byte {
 	return []byte(`
 		[
 			{
-				"date": "2021-07-01T00:00:00Z",
+				"date": "2024-07-01T00:00:00Z",
 				"bookings": [
 					{
 						"reference": "44444",
@@ -89,8 +89,8 @@ func simulateDatesData() []byte {
 						"dayCurrent": 1,
 						"daysTotal": 2,
 						"roomName": "Room 2",
-						"startTime": "2021-07-01T08:00:00Z",
-						"endTime": "2021-07-01T10:00:00Z",
+						"startTime": "2024-07-01T08:00:00Z",
+						"endTime": "2024-07-01T10:00:00Z",
 						"number": 5,
 						"layout": "Theatre",
 						"roomNotes": "Another note for the room",
@@ -101,13 +101,13 @@ func simulateDatesData() []byte {
 								"notes": "Wireless mic"
 							}
 						],
-						"nextUse": "2021-07-02T08:00:00Z",
+						"nextUse": "2024-07-02T08:00:00Z",
 						"isChangedSince": true
 					}
 				]
 			},
 			{
-				"date": "2021-07-02T00:00:00Z",
+				"date": "2024-07-02T00:00:00Z",
 				"bookings": [
 					{
 						"reference": "44444",
@@ -141,8 +141,8 @@ func simulateDatesData() []byte {
 						"dayCurrent": 2,
 						"daysTotal": 2,
 						"roomName": "Room 2",
-						"startTime": "2021-07-02T08:00:00Z",
-						"endTime": "2021-07-02T10:00:00Z",
+						"startTime": "2024-07-02T08:00:00Z",
+						"endTime": "2024-07-02T10:00:00Z",
 						"number": 5,
 						"layout": "Theatre",
 						"roomNotes": "Second day for Room 2",
@@ -153,13 +153,13 @@ func simulateDatesData() []byte {
 								"notes": "Wireless mic"
 							}
 						],
-						"nextUse": "2021-07-03T08:00:00Z",
+						"nextUse": "2024-07-03T08:00:00Z",
 						"isChangedSince": false
 					}
 				]
 			},
 			{
-				"date": "2021-07-03T00:00:00Z",
+				"date": "2024-07-03T00:00:00Z",
 				"bookings": [
 					{
 						"reference": "44444",
@@ -167,7 +167,7 @@ func simulateDatesData() []byte {
 						"dayCurrent": 3,
 						"daysTotal": 3,
 						"roomName": "Room 1",
-						"startTime": "2021-07-03T09:00:00Z",
+						"startTime": "2024-07-03T09:00:00Z",
 						"endTime": null,
 						"number": 15,
 						"layout": "U-Shape",
@@ -179,7 +179,7 @@ func simulateDatesData() []byte {
 								"notes": "Day 3 projector note"
 							}
 						],
-						"nextUse": "2021-07-10T09:00:00Z",
+						"nextUse": "2024-07-10T09:00:00Z",
 						"isChangedSince": false
 					},
 					{
@@ -188,8 +188,8 @@ func simulateDatesData() []byte {
 						"dayCurrent": 1,
 						"daysTotal": 1,
 						"roomName": "Conference Hall",
-						"startTime": "2021-07-03T11:00:00Z",
-						"endTime": "2021-07-03T13:00:00Z",
+						"startTime": "2024-07-03T11:00:00Z",
+						"endTime": "2024-07-03T13:00:00Z",
 						"number": 50,
 						"layout": "Banquet",
 						"roomNotes": "Single day event",
@@ -206,7 +206,7 @@ func simulateDatesData() []byte {
 				]
 			},
 			{
-				"date": "2021-07-04T00:00:00Z",
+				"date": "2024-07-04T00:00:00Z",
 				"bookings": [
 					{
 						"reference": "99999",
@@ -229,8 +229,8 @@ func simulateDatesData() []byte {
 						"dayCurrent": 1,
 						"daysTotal": 1,
 						"roomName": "Room 4",
-						"startTime": "2021-07-04T10:30:00Z",
-						"endTime": "2021-07-04T12:30:00Z",
+						"startTime": "2024-07-04T10:30:00Z",
+						"endTime": "2024-07-04T12:30:00Z",
 						"number": 7,
 						"layout": "Theatre",
 						"roomNotes": "Focus on new features",
@@ -241,7 +241,7 @@ func simulateDatesData() []byte {
 								"notes": "Large whiteboard"
 							}
 						],
-						"nextUse": "2021-07-05T09:00:00Z",
+						"nextUse": "2024-07-05T09:00:00Z",
 						"isChangedSince": true
 					}
 				]

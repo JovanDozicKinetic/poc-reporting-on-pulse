@@ -5,7 +5,6 @@ import "time"
 type TemplateData struct {
 
 	// Main data:
-	// SiteName string    `json:"siteName"`
 	AreaName string    `json:"areaName"`
 	DateFrom time.Time `json:"dateFrom"`
 	DateTo   time.Time `json:"dateTo"`
