@@ -2,6 +2,7 @@ package roomusage
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"path/filepath"
 	helpers "pdf-poc/internal/helpers"
@@ -17,17 +18,15 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 	changedSince := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
 
 	// Parse query parameters
-	// query := r.URL.Query()
+	query := r.URL.Query()
 
-	// Getting the mock data:
-
-	dates := GetEventDataWithoutMeetingRooms()
+	separated := (query.Get("separated") == "true")
 
 	// Preparing the file
 
 	fileName := fmt.Sprintf("room_usage_%s.pdf", time.Now().Format("2006-01-02-15-04-05"))
 
-	// Preparing the template
+	// Getting the mock data:
 
 	templateData := TemplateData{
 		AreaName: "Kx Campus",
@@ -36,8 +35,19 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 
 		HasChangedSince: hasIsChanged,
 		ChangedSince:    changedSince,
-
-		Dates: dates,
+	}
+	if !separated {
+		log.Println("Generating non-separated report")
+		dates := GetDatesData()
+		templateData.IsSeparated = false
+		templateData.Dates = &dates
+		templateData.DatesSeparated = nil
+	} else {
+		log.Println("Generating separated report")
+		dates := GetDatesSeparatedData()
+		templateData.IsSeparated = true
+		templateData.Dates = nil
+		templateData.DatesSeparated = &dates
 	}
 
 	// HTML and PDF generation

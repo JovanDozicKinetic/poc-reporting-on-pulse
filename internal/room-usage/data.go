@@ -5,17 +5,32 @@ import (
 	"log"
 )
 
-func GetEventDataWithoutMeetingRooms() []Dates {
+func GetDatesData() []Date {
 	jsonData := simulateDatesData()
 	events := unmarshalData(jsonData)
 	return events
 }
 
-func unmarshalData(jsonData []byte) []Dates {
-	var events []Dates
+func unmarshalData(jsonData []byte) []Date {
+	var events []Date
 	err := json.Unmarshal(jsonData, &events)
 	if err != nil {
 		log.Println("JSON error: ", err)
+	}
+	return events
+}
+
+func GetDatesSeparatedData() []DateSeparated {
+	jsonData := simulateDatesSeparatedData()
+	events := unmarshalDatesSeparatedData(jsonData)
+	return events
+}
+
+func unmarshalDatesSeparatedData(jsonData []byte) []DateSeparated {
+	var events []DateSeparated
+	err := json.Unmarshal(jsonData, &events)
+	if err != nil {
+		log.Println("JSON error:", err)
 	}
 	return events
 }
@@ -247,5 +262,152 @@ func simulateDatesData() []byte {
 				]
 			}
 		]
+	`)
+}
+
+func simulateDatesSeparatedData() []byte {
+	return []byte(`
+	[
+		{
+			"date": "2024-07-01T00:00:00Z",
+			"newEventsSameDayTakeDown": [
+				{
+					"reference": "AAAAA",
+					"name": "New Morning Session",
+					"dayCurrent": 1,
+					"daysTotal": 1,
+					"roomName": "Room 101",
+					"startTime": "2024-07-01T09:00:00Z",
+					"endTime": "2024-07-01T11:00:00Z",
+					"number": 10,
+					"layout": "Theatre",
+					"roomNotes": "Morning session with new attendees",
+					"equipment": [
+						{
+							"name": "Projector",
+							"quantity": 1,
+							"notes": "HD projector"
+						}
+					],
+					"nextUse": null,
+					"changedSince": true
+				}
+			],
+			"newEvents": [
+				{
+					"reference": "BBBBB",
+					"name": "New Afternoon Workshop",
+					"dayCurrent": 1,
+					"daysTotal": 2,
+					"roomName": "Conference Hall",
+					"startTime": "2024-07-01T13:00:00Z",
+					"endTime": "2024-07-01T15:00:00Z",
+					"number": 25,
+					"layout": "Classroom",
+					"roomNotes": "Workshop focusing on best practices",
+					"equipment": [
+						{
+							"name": "Laptop",
+							"quantity": 10,
+							"notes": "Provided by organizer"
+						}
+					],
+					"nextUse": "2024-07-02T09:00:00Z",
+					"changedSince": true
+				}
+			],
+			"runningEvents": [
+				{
+					"reference": "CCCCC",
+					"name": "All-Day Meeting",
+					"dayCurrent": 2,
+					"daysTotal": 3,
+					"roomName": "Room 2",
+					"startTime": null,
+					"endTime": null,
+					"number": 12,
+					"layout": "U-Shape",
+					"roomNotes": "Ongoing from previous day",
+					"equipment": [],
+					"nextUse": "2024-07-02T14:00:00Z",
+					"changedSince": false
+				}
+			],
+			"takeDownEvents": [
+				{
+					"reference": "DDDDD",
+					"name": "Completed Workshop",
+					"dayCurrent": 1,
+					"daysTotal": 1,
+					"roomName": "Room 3",
+					"startTime": "2024-07-01T08:00:00Z",
+					"endTime": "2024-07-01T10:00:00Z",
+					"number": 8,
+					"layout": "Square",
+					"roomNotes": "Packing up equipment",
+					"equipment": [
+						{
+							"name": "Whiteboard",
+							"quantity": 1,
+							"notes": "Needs erasing"
+						}
+					],
+					"nextUse": null,
+					"changedSince": false
+				}
+			]
+		},
+		{
+			"date": "2024-07-02T00:00:00Z",
+			"newEventsSameDayTakeDown": [],
+			"newEvents": [
+				{
+					"reference": "FFFFF",
+					"name": "One-Day Seminar",
+					"dayCurrent": 1,
+					"daysTotal": 1,
+					"roomName": "Room 4",
+					"startTime": "2024-07-02T09:30:00Z",
+					"endTime": "2024-07-02T12:00:00Z",
+					"number": 20,
+					"layout": "Boardroom",
+					"roomNotes": "Morning seminar only",
+					"equipment": [
+						{
+							"name": "Flipchart",
+							"quantity": 1,
+							"notes": "For brainstorming"
+						}
+					],
+					"nextUse": "2024-07-03T09:00:00Z",
+					"changedSince": true
+				}
+			],
+			"runningEvents": [
+				{
+					"reference": "BBBBB",
+					"name": "New Afternoon Workshop",
+					"dayCurrent": 2,
+					"daysTotal": 2,
+					"roomName": "Conference Hall",
+					"startTime": "2024-07-01T13:00:00Z",
+					"endTime": "2024-07-01T15:00:00Z",
+					"number": 25,
+					"layout": "Classroom",
+					"roomNotes": "Second day, continuing from previous day",
+					"equipment": [
+						{
+							"name": "Laptop",
+							"quantity": 10,
+							"notes": "Provided by organizer"
+						}
+					],
+					"nextUse": null,
+					"changedSince": false
+				}
+			],
+			"takeDownEvents": []
+		}
+	]
 	`)
 }

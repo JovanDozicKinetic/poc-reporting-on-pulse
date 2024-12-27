@@ -13,12 +13,24 @@ type TemplateData struct {
 	HasChangedSince bool      `json:"hasChangedSince"`
 	ChangedSince    time.Time `json:"changedSince"`
 
-	Dates []Dates `json:"dates"`
+	IsSeparated bool `json:"isSeparated"`
+
+	Dates          *[]Date          `json:"dates"`          // This is nil if IsSeparated is true
+	DatesSeparated *[]DateSeparated `json:"datesSeparated"` // This is nil if IsSeparated is false
 }
 
-type Dates struct {
+type Date struct {
 	Date     time.Time `json:"date"`
 	Bookings []Booking `json:"bookings"`
+}
+
+type DateSeparated struct {
+	Date time.Time `json:"date"`
+
+	NewEventsSameDayTakeDown *[]Booking `json:"newEventsSameDayTakeDown"`
+	NewEvents                *[]Booking `json:"newEvents"`
+	RunningEvents            *[]Booking `json:"runningEvents"`
+	TakeDownEvents           *[]Booking `json:"takeDownEvents"`
 }
 
 type Booking struct {
