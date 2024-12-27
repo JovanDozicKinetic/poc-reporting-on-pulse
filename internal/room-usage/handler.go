@@ -14,7 +14,7 @@ func GenerateReportHandler(w http.ResponseWriter, r *http.Request) {
 	// Default values
 	dateFrom := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
 	dateTo := time.Date(2024, 12, 31, 23, 59, 59, 999999999, time.UTC)
-	hasIsChanged := false
+	hasIsChanged := true
 	changedSince := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
 
 	// Parse query parameters

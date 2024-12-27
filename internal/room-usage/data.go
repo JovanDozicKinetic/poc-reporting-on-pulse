@@ -291,6 +291,27 @@ func simulateDatesSeparatedData() []byte {
 					],
 					"nextUse": null,
 					"changedSince": true
+				},
+				{
+					"reference": "ABABA",
+					"name": "New Morning Session 2",
+					"dayCurrent": 1,
+					"daysTotal": 1,
+					"roomName": "Room 101",
+					"startTime": "2024-07-01T09:00:00Z",
+					"endTime": "2024-07-01T11:00:00Z",
+					"number": 10,
+					"layout": "Theatre",
+					"roomNotes": "Morning session with new attendees",
+					"equipment": [
+						{
+							"name": "Projector",
+							"quantity": 1,
+							"notes": "HD projector"
+						}
+					],
+					"nextUse": null,
+					"changedSince": true
 				}
 			],
 			"newEvents": [
