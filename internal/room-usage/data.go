@@ -58,6 +58,32 @@ func simulateDatesData() []byte {
 						"isChangedSince": false
 					},
 					{
+						"reference": "10101",
+						"name": "Example Event in Room 1010",
+						"dayCurrent": 1,
+						"daysTotal": 3,
+						"roomName": "Room 1010",
+						"startTime": null,
+						"endTime": null,
+						"number": 10,
+						"layout": "Boardroom",
+						"roomNotes": "This is a note for the room",
+						"equipment": [
+							{
+								"name": "Projector",
+								"quantity": 10,
+								"notes": "This is a note for the equipment"
+							},
+							{
+								"name": "Laptop",
+								"quantity": 10,
+								"notes": "This is a note for the equipment"
+							}
+						],
+						"nextUse": null,
+						"isChangedSince": false
+					},
+					{
 						"reference": "12345",
 						"name": "Example Event in Room 2",
 						"dayCurrent": 1,
