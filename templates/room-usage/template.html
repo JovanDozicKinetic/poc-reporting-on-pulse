@@ -170,9 +170,12 @@
         </tr>
       </thead>
 
-      {{- range .Dates }}
+      {{- /* --------------------------------------------------------------- */ -}}
+      {{- /* IF NOT SEPARATED (using .Dates) */ -}}
+      {{- /* --------------------------------------------------------------- */ -}}
+      {{- if not .IsSeparated }}
       <tbody>
-
+        {{- range .Dates }}
         <!-- Show the date row -->
         <tr class="date-row">
           <td colspan="7">
@@ -298,6 +301,515 @@
         {{- end }}
         {{- end }}
       </tbody>
+
+      {{- /* --------------------------------------------------------------- */ -}}
+      {{- /* IF SEPARATED (using .DatesSeparated) */ -}}
+      {{- /* --------------------------------------------------------------- */ -}}
+      {{- else }}
+      {{- range .DatesSeparated }}
+      <tbody>
+        <!-- Show the date row -->
+        <tr class="date-row">
+          <td colspan="7">
+            <h3>{{ .Date | date "Monday 02 January 2006" }}</h3>
+          </td>
+        </tr>
+
+        <!-- New Events Same Day Take Down -->
+        {{- if .NewEventsSameDayTakeDown }}
+        <tr class="table-title">
+          <td class="title-container" colspan="7"><strong>New Events Same Day Take Down</strong></td>
+        </tr>
+        {{- range .NewEventsSameDayTakeDown }}
+        <tr class="booking-row">
+          <!-- Booking info -->
+          <td class="ru-booking child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    No. {{ .Reference }}
+                  </td>
+                  <td>
+                    {{ .DayCurrent }} of {{ .DaysTotal }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    {{ .Name }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    Area: {{ $.AreaName }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Room & Time -->
+          <td class="ru-room-time child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ .RoomName }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{- if and .StartTime .EndTime -}}
+                    Booked: {{ .StartTime | date "15:04" }} - {{ .EndTime | date "15:04" }}
+                    {{- else if .StartTime -}}
+                    Booked From: {{ .StartTime | date "15:04" }}
+                    {{- else if .EndTime -}}
+                    Booked Until: {{ .EndTime | date "15:04" }}
+                    {{- else -}}
+                    All day
+                    {{- end }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Number -->
+          <td class="ru-no">
+            {{ .Number }}
+          </td>
+
+          <!-- Layout & Room Notes -->
+          <td class="ru-layout child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ .Layout }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ .RoomNotes }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Equipment -->
+          <td class="ru-equipment child-table-cell">
+            <table class="child-table">
+              <tbody>
+                {{- range .Equipment }}
+                <tr>
+                  <td class="ru-equipment-qty">
+                    {{ .Quantity }} x
+                  </td>
+                  <td>
+                    {{ .Name }}
+                    {{- if .Notes }}
+                    <br>
+                    ({{ .Notes }})
+                    {{- end }}
+                  </td>
+                </tr>
+                {{- end }}
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Next Use -->
+          <td class="ru-next-use none-border-right">
+            {{- if .NextUse }}
+            {{ .NextUse | date "02 Jan 2006" }}
+            <br>
+            {{ .NextUse | date "15:04" }}
+            {{- end }}
+          </td>
+
+          <!-- Changed since -->
+          <td class="ru-changed-since none-border-left">
+            {{- if and $.HasChangedSince .IsChangedSince }}
+            <span class="is-changed">!</span>
+            {{- end }}
+          </td>
+        </tr>
+        {{- end }}
+        {{- end }}
+
+        <!-- New Events -->
+        {{- if .NewEvents }}
+        <tr class="table-title">
+          <td class="title-container" colspan="7"><strong>New Events</strong></td>
+        </tr>
+        {{- range .NewEvents }}
+        <tr class="booking-row">
+          <!-- Booking info -->
+          <td class="ru-booking child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    No. {{ .Reference }}
+                  </td>
+                  <td>
+                    {{ .DayCurrent }} of {{ .DaysTotal }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    {{ .Name }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    Area: {{ $.AreaName }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Room & Time -->
+          <td class="ru-room-time child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ .RoomName }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{- if and .StartTime .EndTime -}}
+                    Booked: {{ .StartTime | date "15:04" }} - {{ .EndTime | date "15:04" }}
+                    {{- else if .StartTime -}}
+                    Booked From: {{ .StartTime | date "15:04" }}
+                    {{- else if .EndTime -}}
+                    Booked Until: {{ .EndTime | date "15:04" }}
+                    {{- else -}}
+                    All day
+                    {{- end }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Number -->
+          <td class="ru-no">
+            {{ .Number }}
+          </td>
+
+          <!-- Layout & Room Notes -->
+          <td class="ru-layout child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ .Layout }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ .RoomNotes }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Equipment -->
+          <td class="ru-equipment child-table-cell">
+            <table class="child-table">
+              <tbody>
+                {{- range .Equipment }}
+                <tr>
+                  <td class="ru-equipment-qty">
+                    {{ .Quantity }} x
+                  </td>
+                  <td>
+                    {{ .Name }}
+                    {{- if .Notes }}
+                    <br>
+                    ({{ .Notes }})
+                    {{- end }}
+                  </td>
+                </tr>
+                {{- end }}
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Next Use -->
+          <td class="ru-next-use none-border-right">
+            {{- if .NextUse }}
+            {{ .NextUse | date "02 Jan 2006" }}
+            <br>
+            {{ .NextUse | date "15:04" }}
+            {{- end }}
+          </td>
+
+          <!-- Changed since -->
+          <td class="ru-changed-since none-border-left">
+            {{- if and $.HasChangedSince .IsChangedSince }}
+            <span class="is-changed">!</span>
+            {{- end }}
+          </td>
+        </tr>
+        {{- end }}
+        {{- end }}
+
+        <!-- Running Events -->
+        {{- if .RunningEvents }}
+        <tr class="table-title">
+          <td class="title-container" colspan="7"><strong>Running Events</strong></td>
+        </tr>
+        {{- range .RunningEvents }}
+        <tr class="booking-row">
+          <!-- Booking info -->
+          <td class="ru-booking child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    No. {{ .Reference }}
+                  </td>
+                  <td>
+                    {{ .DayCurrent }} of {{ .DaysTotal }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    {{ .Name }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    Area: {{ $.AreaName }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Room & Time -->
+          <td class="ru-room-time child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ .RoomName }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{- if and .StartTime .EndTime -}}
+                    Booked: {{ .StartTime | date "15:04" }} - {{ .EndTime | date "15:04" }}
+                    {{- else if .StartTime -}}
+                    Booked From: {{ .StartTime | date "15:04" }}
+                    {{- else if .EndTime -}}
+                    Booked Until: {{ .EndTime | date "15:04" }}
+                    {{- else -}}
+                    All day
+                    {{- end }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Number -->
+          <td class="ru-no">
+            {{ .Number }}
+          </td>
+
+          <!-- Layout & Room Notes -->
+          <td class="ru-layout child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ .Layout }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ .RoomNotes }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Equipment -->
+          <td class="ru-equipment child-table-cell">
+            <table class="child-table">
+              <tbody>
+                {{- range .Equipment }}
+                <tr>
+                  <td class="ru-equipment-qty">
+                    {{ .Quantity }} x
+                  </td>
+                  <td>
+                    {{ .Name }}
+                    {{- if .Notes }}
+                    <br>
+                    ({{ .Notes }})
+                    {{- end }}
+                  </td>
+                </tr>
+                {{- end }}
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Next Use -->
+          <td class="ru-next-use none-border-right">
+            {{- if .NextUse }}
+            {{ .NextUse | date "02 Jan 2006" }}
+            <br>
+            {{ .NextUse | date "15:04" }}
+            {{- end }}
+          </td>
+
+          <!-- Changed since -->
+          <td class="ru-changed-since none-border-left">
+            {{- if and $.HasChangedSince .IsChangedSince }}
+            <span class="is-changed">!</span>
+            {{- end }}
+          </td>
+        </tr>
+        {{- end }}
+        {{- end }}
+
+        <!-- Take Down Events -->
+        {{- if .TakeDownEvents }}
+        <tr class="table-title">
+          <td class="title-container" colspan="7"><strong>Take Down Events</strong></td>
+        </tr>
+        {{- range .TakeDownEvents }}
+        <tr class="booking-row">
+          <!-- Booking info -->
+          <td class="ru-booking child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    No. {{ .Reference }}
+                  </td>
+                  <td>
+                    {{ .DayCurrent }} of {{ .DaysTotal }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    {{ .Name }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    Area: {{ $.AreaName }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Room & Time -->
+          <td class="ru-room-time child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ .RoomName }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{- if and .StartTime .EndTime -}}
+                    Booked: {{ .StartTime | date "15:04" }} - {{ .EndTime | date "15:04" }}
+                    {{- else if .StartTime -}}
+                    Booked From: {{ .StartTime | date "15:04" }}
+                    {{- else if .EndTime -}}
+                    Booked Until: {{ .EndTime | date "15:04" }}
+                    {{- else -}}
+                    All day
+                    {{- end }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Number -->
+          <td class="ru-no">
+            {{ .Number }}
+          </td>
+
+          <!-- Layout & Room Notes -->
+          <td class="ru-layout child-table-cell">
+            <table class="child-table">
+              <tbody>
+                <tr>
+                  <td>
+                    {{ .Layout }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{ .RoomNotes }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Equipment -->
+          <td class="ru-equipment child-table-cell">
+            <table class="child-table">
+              <tbody>
+                {{- range .Equipment }}
+                <tr>
+                  <td class="ru-equipment-qty">
+                    {{ .Quantity }} x
+                  </td>
+                  <td>
+                    {{ .Name }}
+                    {{- if .Notes }}
+                    <br>
+                    ({{ .Notes }})
+                    {{- end }}
+                  </td>
+                </tr>
+                {{- end }}
+              </tbody>
+            </table>
+          </td>
+
+          <!-- Next Use -->
+          <td class="ru-next-use none-border-right">
+            {{- if .NextUse }}
+            {{ .NextUse | date "02 Jan 2006" }}
+            <br>
+            {{ .NextUse | date "15:04" }}
+            {{- end }}
+          </td>
+
+          <!-- Changed since -->
+          <td class="ru-changed-since none-border-left">
+            {{- if and $.HasChangedSince .IsChangedSince }}
+            <span class="is-changed">!</span>
+            {{- end }}
+          </td>
+        </tr>
+        {{- end }}
+        {{- end }}
+
+      </tbody>
+      {{- end }}
+      {{- end }}
     </table>
   </div>
 

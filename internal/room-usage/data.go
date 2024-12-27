@@ -359,7 +359,7 @@ func simulateDatesSeparatedData() []byte {
 		},
 		{
 			"date": "2024-07-02T00:00:00Z",
-			"newEventsSameDayTakeDown": [],
+			"newEventsSameDayTakeDown": null,
 			"newEvents": [
 				{
 					"reference": "FFFFF",
@@ -406,7 +406,7 @@ func simulateDatesSeparatedData() []byte {
 					"changedSince": false
 				}
 			],
-			"takeDownEvents": []
+			"takeDownEvents": null
 		}
 	]
 	`)

@@ -3,7 +3,6 @@ package roomusage
 import "time"
 
 type TemplateData struct {
-
 	// Main data:
 	AreaName string    `json:"areaName"`
 	DateFrom time.Time `json:"dateFrom"`
