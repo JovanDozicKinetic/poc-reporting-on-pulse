@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"html/template"
 	"log"
-	helpers "pdf-poc/internal/helpers"
-	"strings"
 	"time"
 
 	"github.com/Masterminds/sprig/v3"
@@ -40,11 +38,11 @@ func GenerateHTML(events []EventData, cateringTypes []CateringType, siteID int, 
 
 	htmlContent := buf.String()
 
-	err = helpers.SaveHTMLToFile(htmlContent, strings.Replace(fileName, ".pdf", ".html", -1))
-	if err != nil {
-		log.Println("Error saving HTML content to a file", fileName, "error: ", err)
-		return "", err
-	}
+	// err = helpers.SaveHTMLToFile(htmlContent, strings.Replace(fileName, ".pdf", ".html", -1))
+	// if err != nil {
+	// 	log.Println("Error saving HTML content to a file", fileName, "error: ", err)
+	// 	return "", err
+	// }
 
 	return htmlContent, nil
 }
